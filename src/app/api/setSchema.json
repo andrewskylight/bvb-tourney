@@ -1,0 +1,4 @@
+[
+  {"setNo": 1, "pointCap":21, "winBy2": true},
+  {"setNo": 2, "pointCap":21, "winBy2": false},
+  {"setNo": 3, "pointCap":15, "winBy2": true}]

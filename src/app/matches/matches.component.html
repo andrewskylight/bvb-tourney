@@ -1,0 +1,52 @@
+  <label for = 'teams'>Choose a team:&nbsp;</label>
+  <select name="teams" id="teams" [(ngModel)]="selectedTeam">
+    <option *ngFor='let team of teams'>{{ team }}</option>
+    <option>All</option>
+  </select>
+
+  <button mat-raised-button color="primary" (click)="test()">db value</button>
+  <button mat-raised-button color="primary" (click)="test2()">ai update</button>
+
+  <div class="col-md-4"><hr></div>
+  <table class="table table-bordered">
+    <div *ngFor = 'let match of matches'>
+      <tr *ngIf="displayRow(match)">
+          <td class="teamcol"></td>
+          <td *ngFor ='let set of match.sets; let i = index'>
+            <button mat-raised-button color="primary" (click)="editSet(match, set, swapTeams(match))">
+              Set {{ set.setNo }}
+            </button>
+          </td>
+      </tr>
+      <tr *ngIf="displayRow(match)">
+          <td class="teamcol">{{getTeam1(match)}}</td>
+          <td *ngFor ='let set of match.sets; let i = index'>
+            <div *ngIf="!swapTeams(match)">
+              {{ set.t1_points }}
+            </div>
+            <div *ngIf="swapTeams(match)">
+              {{ set.t2_points }}
+            </div>
+
+          </td>
+      </tr>
+
+      <tr *ngIf="displayRow(match)">
+          <td class="teamcol">{{getTeam2(match)}}</td>
+          <td *ngFor ='let set of match.sets; let i = index'>
+            <div *ngIf="!swapTeams(match)">
+              {{ set.t2_points }}
+            </div>
+            <div *ngIf="swapTeams(match)">
+              {{ set.t1_points }}
+            </div>
+          </td>
+      </tr>
+      <hr *ngIf="displayRow(match)">
+
+    </div>
+  </table>
+
+
+
+<!-- <button type="button" class="btn btn-link" (click)="editMatch(match)"></button> -->
