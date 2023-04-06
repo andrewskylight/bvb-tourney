@@ -131,6 +131,7 @@ export class MatchesComponent {
   editSet(match: Match, set: Set, swapTeams: boolean): void {
     const dialogRef = this.dialog.open(SetDialogComponent, {
       width: '320px',
+      position: {top:'0px'} ,
       data: {
         match,
         set,

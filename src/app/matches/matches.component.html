@@ -13,7 +13,8 @@
       <tr *ngIf="displayRow(match)">
           <td class="teamcol"></td>
           <td *ngFor ='let set of match.sets; let i = index'>
-            <button mat-flat-button color="primary" (click)="editSet(match, set, swapTeams(match))">
+            <!-- <button mat-flat-button color="primary" (click)="editSet(match, set, swapTeams(match))"> -->
+            <button type="button" class="btn btn-primary" (click)="editSet(match, set, swapTeams(match))">
               S{{ set.setNo }}
             </button>
           </td>
