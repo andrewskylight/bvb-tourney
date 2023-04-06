@@ -1,0 +1,47 @@
+<h2>Set {{ data.set.setNo }}</h2>
+  <div *ngIf="!swapTeams">
+    <mat-form-field>
+      <mat-label>{{ data.match.team1 }}</mat-label>
+      <input type ="number" name="score1" matInput cdkFocusInitial (input) = "input_changed()"
+        [(ngModel)]="data.set.t1_points" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{ data.match.team2 }}</mat-label>
+      <input type ="number" name="score2" matInput cdkFocusInitial (input) = "input_changed()"
+        [(ngModel)]="data.set.t2_points" />
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="swapTeams">
+    <mat-form-field>
+      <mat-label>{{ data.match.team2 }}</mat-label>
+      <input type ="number" name="score2" matInput cdkFocusInitial (input) = "input_changed()"
+        [(ngModel)]="data.set.t2_points" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{ data.match.team1 }}</mat-label>
+      <input type ="number" name="score1" matInput cdkFocusInitial (input) = "input_changed()"
+        [(ngModel)]="data.set.t1_points" />
+    </mat-form-field>
+  </div>
+
+<mat-hint *ngIf= "!(errorMessage ? '': null)">{{ errorMessage }}</mat-hint>
+
+<div mat-dialog-actions>
+  <button mat-button
+    [disabled]= "errorMessage ? '': null"
+    (click)="submit()">OK</button>
+    <!-- <button mat-button
+    [disabled]= "errorMessage ? '': null"
+    [mat-dialog-close]="{ match: data.match, set: data.set}">OK</button> -->
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button
+    mat-fab
+    color="secondary"
+    aria-label="Reset"
+    (click)="reset()">
+    <mat-icon>undo</mat-icon>
+  </button>
+</div>
