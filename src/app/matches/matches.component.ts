@@ -53,11 +53,13 @@ export class MatchesComponent {
 
   }
 
-  getTeam1(match: Match): String {
+  getTeam1(match: Match): String[] {
     if (match.team2 == this.selectedTeam)
-      return match.team2;
+      // return match.team2;
+      return ["Barry", "Tsura"];
     else
-      return match.team1;
+      // return match.team1;
+      return ["Barry", "Tsura"];
   }
 
   getTeam2(match: Match): String {
