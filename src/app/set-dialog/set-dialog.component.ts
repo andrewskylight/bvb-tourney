@@ -97,13 +97,12 @@ class SetData {
     if (this.data.set.t2_points != null)
       this.points2 = this.data.set.t2_points;
 
-
     if (this.data.set.setNo != null)
       this.setNo = this.data.set.setNo;
 
-  this.setPointCap = setSchema[this.setNo-1].pointCap;
+    this.setPointCap = setSchema[this.setNo-1].pointCap;
 
-  this.pointDiff = Math.abs(this.points1 - this.points2);
+    this.pointDiff = Math.abs(this.points1 - this.points2);
 
   }
 
@@ -162,16 +161,16 @@ class UserInputValidator {
     let setData = new SetData(this.data, this.setSchema);
     let errorMessage = "";
 
-      //points too low
+    //points too low
     if (setData.team1PointsTooLow())
-      errorMessage = this.data.match.team1 + " points too low.";
-    else if (setData.team1PointsTooLow())
-      errorMessage = this.data.match.team2 + " points too low.";
+      errorMessage = this.data.match.team1 + " invalid points.";
+    else if (setData.team2PointsTooLow())
+      errorMessage = this.data.match.team2 + " invalid points.";
 
-      //points too high
+    //points too high
     if (setData.team1PointsTooHigh())
       errorMessage = this.data.match.team1 + " points too high.";
-    else if (setData.team1PointsTooHigh())
+    else if (setData.team2PointsTooHigh())
       errorMessage = this.data.match.team2 + " points too high.";
 
       //check for a 'winner'
@@ -183,7 +182,7 @@ class UserInputValidator {
     //win by two errors
     else if (setData.winBy2()){
       if (setData.atLeastOneTeamOverPointCap() && !setData.winBy2ConditionMet()){
-          errorMessage = "error: win by 2 in effect; score diff = " + setData.pointDiff;
+          errorMessage = "win by 2 in effect; score diff = " + setData.pointDiff;
       }
     }
 
