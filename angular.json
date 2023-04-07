@@ -1,9 +1,13 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
+  "cli": {
+    "packageManager": "npm",
+    "analytics": false
+  },
   "newProjectRoot": "projects",
   "projects": {
-    "bvb-tourney": {
+    "bvbTourney": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -26,6 +30,7 @@
             ],
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -35,8 +40,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -61,10 +66,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "bvb-tourney:build:production"
+              "browserTarget": "bvbTourney:build:production"
             },
             "development": {
-              "browserTarget": "bvb-tourney:build:development"
+              "browserTarget": "bvbTourney:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -72,7 +77,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "bvb-tourney:build"
+            "browserTarget": "bvbTourney:build"
           }
         },
         "test": {
