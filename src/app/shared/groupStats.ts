@@ -1,4 +1,4 @@
-import { Group, Match, Set } from "./interfaces";
+import { IGroup, IMatch, ISet } from "./interfaces";
 
 //TODO: matchSchema from db
 
@@ -103,7 +103,7 @@ class GroupWithStats{
     });
   }
 
-  consumeMatch(match: Match) {
+  consumeMatch(match: IMatch) {
     let team1 = this.findTeam(match.team1);
     let team2 = this.findTeam(match.team2);
 
@@ -133,7 +133,7 @@ class GroupWithStats{
 
   }
 
-  consumeSet(team1: TeamWithStats, team2: TeamWithStats, set: Set){
+  consumeSet(team1: TeamWithStats, team2: TeamWithStats, set: ISet){
     team1.addSet(set.t1_points, set.t2_points);
     team2.addSet(set.t2_points, set.t1_points);
 
@@ -178,7 +178,7 @@ export class GroupStats {
   private _isEmpty = true;
   private matchSchema = "";
 
-  constructor(groups: Group[], matchSchema: string)
+  constructor(groups: IGroup[], matchSchema: string)
     {
       this.matchSchema = matchSchema;
       groups.forEach(group => {
@@ -194,7 +194,7 @@ export class GroupStats {
     return this.matchSchema;
   }
 
-  consumeAllMatches(matches: Match[]){
+  consumeAllMatches(matches: IMatch[]){
 
     for (let match of matches){
       let groupIndex = match.group.charCodeAt(0) - 65;

@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { Match, Group } from './shared/interfaces';
+import { IMatch, IGroup } from './shared/interfaces';
+import { Match } from './shared/match';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import groupsData from '../app/api/groups.json';
@@ -24,9 +25,7 @@ export class MatchService {
     private http: HttpClient)
     { }
 
-
-
-  getGroups(): Observable<Group[]> {
+  getGroups(): Observable<IGroup[]> {
     const output = of(groupsData);
     return output;
 

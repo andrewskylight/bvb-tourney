@@ -7,8 +7,12 @@ import { SetDialogComponent, SetDialogData } from '../set-dialog/set-dialog.comp
 
 import { MatchService } from '../match.service';
 
-import { Group, Match, Set } from '../shared/interfaces';
-import { JsonService } from 'src/json.service';
+import { IGroup, IMatch, ISet } from '../shared/interfaces';
+import setSchema from '../api/setSchema.json';
+
+
+import { Match } from '../shared/match';
+import { Set } from '../shared/set';
 
 @Component({
   selector: 'app-matches',
@@ -17,13 +21,13 @@ import { JsonService } from 'src/json.service';
 })
 export class MatchesComponent {
 
-  Groups: Group[] = groupsData;
-  Matches: Match[] = matchesData;
+  Groups: IGroup[] = groupsData;
+  //Matches: IMatch[] = matchesData;
   teams: String[] = [];
   matches: Match[];
   selectedTeam = "All";
 
-  constructor(private dialog: MatDialog, private matchService: MatchService, private jsonService: JsonService) {
+  constructor(private dialog: MatDialog, private matchService: MatchService) {
     groupsData.forEach(row => {
       row.teams.forEach(team => {
         this.teams.push(team)
@@ -33,7 +37,16 @@ export class MatchesComponent {
 
   ngOnInit(): void {
     this.matchService.getMatches()
-      .subscribe(matches => this.matches = matches);
+      .subscribe(matches => {
+        this.matches = matches;
+        this.initMatches();});
+  }
+
+  initMatches(){
+    this.matches.forEach(match => {
+      let matchHelper = new Match(match, setSchema);
+      matchHelper.AddSetIfNeeded()}
+      );
   }
 
   swapTeams(match: Match): boolean {
@@ -94,11 +107,6 @@ export class MatchesComponent {
       result = "Tie";
 
     return result;
-
-  }
-
-  getTestHTML() {
-    return [21, 21];
   }
 
   getTeamResults(match: Match, teamNo: Number): String {
@@ -121,12 +129,10 @@ export class MatchesComponent {
           output += set.t1_points + " "
       }
     }
-
-
     return output;
   }
 
-  editSet(match: Match, set: Set, swapTeams: boolean): void {
+  editSet(match: Match, set: ISet, swapTeams: boolean): void {
     const dialogRef = this.dialog.open(SetDialogComponent, {
       width: '245px',
       position: {top:'0px'} ,
@@ -137,36 +143,38 @@ export class MatchesComponent {
         enableDelete: true,
       },
     });
-    dialogRef.afterClosed().subscribe((result: SetDialogData) => {
+    dialogRef.afterClosed().subscribe((
+      result: SetDialogData) => {
       if (!result) {
         return;
       }
+      //result.match.setSetSchema(setSchema);
+      console.log(result.match);
+
+      // let test: Match = result.match;
+      // test.isTieBreakerRequired();
+
+      // if (result.match.isTieBreakerRequired())
+      //   result.match.sets.push(result.match.GenTieBreakerSet());
+      // else
+      // {
+      //   if (result.match.hasTieBreakerSet() && !result.match.isTieBreakerRequired())
+      //     result.match.sets.pop();
+      // }
+
+      //for some reason angular thinks it's still an interface and not a class, hence the workaround
+      let match = new Match (result.match, setSchema);
+      match.AddSetIfNeeded();
+
+      // if (match.isTieBreakerRequired())
+      //   result.match.sets.push(match.GenTieBreakerSet());
+      // else
+      // {
+      //   if (match.hasTieBreakerSet() && !match.isTieBreakerRequired())
+      //     result.match.sets.pop();
+      // }
+
       this.matchService.updateMatch(result.match).subscribe();
     });
-  }
-
-  test(): void {
-
-    this.matchService.getMatch(1)
-      .subscribe(match => alert("Value at db: " + match.sets[0].t1_points));
-
-    let matchOne: Match;
-
-  }
-
-  test2() {
-
-    this.matches[0].sets[0].t1_points = 16;
-    this.matchService.updateMatch(this.matches[0])
-      .subscribe(_ => this.matchService.getMatch(1)
-        .subscribe(result => alert(result.sets[0].t1_points)))
-  }
-
-  testMatchUpdate(match: Match) {
-    match.sets[0].t1_points = 16;
-
-    this.matchService.updateMatch(match)
-      .subscribe(_ => this.matchService.getMatch(1)
-        .subscribe(updatedMatch => alert(updatedMatch.sets[0].t1_points)))
   }
 }

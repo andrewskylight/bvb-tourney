@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatchService } from '../match.service';
 
-import { Match, Group } from '../shared/interfaces';
+import { IMatch, IGroup } from '../shared/interfaces';
 import { GroupStats } from '../shared/groupStats';
 
 import groupsData from '../api/groups.json';
@@ -13,8 +13,8 @@ import groupsData from '../api/groups.json';
 })
 export class GroupsComponent {
 
-  public matches: Match[];
-  public groups: Group[];
+  public matches: IMatch[];
+  public groups: IGroup[];
   public groupsDirect = groupsData;
   public stats: GroupStats;
   private matchSchema = "BO3";    //todo: implement matchSchema
@@ -31,13 +31,13 @@ export class GroupsComponent {
       .subscribe(matches => this.getMatches(matches));
   }
 
-  getMatches(matches: Match[]) {
+  getMatches(matches: IMatch[]) {
     this.matches = matches;
     if (this.groups != undefined && this.stats.isEmpty())
       this.stats.consumeAllMatches(this.matches);
   }
 
-  getGroups(groups: Group[]) {
+  getGroups(groups: IGroup[]) {
     this.groups = groups;
     this.stats = new GroupStats(this.groups, this.matchSchema);
     if (this.matches != undefined && this.stats.isEmpty())

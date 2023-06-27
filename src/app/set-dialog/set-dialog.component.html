@@ -3,13 +3,14 @@
     <div *ngIf="!swapTeams">
       <mat-form-field>
         <mat-label>{{ data.match.team1 }}</mat-label>
-        <input type ="number" name="score1" matInput cdkFocusInitial (input) = "input_changed()"
+        <input type ="number" name="score1" matInput cdkFocusInitial
+          (input) = "handleInputChange()"
           [(ngModel)]="data.set.t1_points" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>{{ data.match.team2 }}</mat-label>
-        <input type ="number" name="score2" matInput cdkFocusInitial (input) = "input_changed()"
+        <input type ="number" name="score2" matInput cdkFocusInitial (input) = "handleInputChange()"
           [(ngModel)]="data.set.t2_points" />
       </mat-form-field>
     </div>
@@ -17,13 +18,13 @@
     <div *ngIf="swapTeams">
       <mat-form-field>
         <mat-label>{{ data.match.team2 }}</mat-label>
-        <input type ="number" name="score2" matInput cdkFocusInitial (input) = "input_changed()"
+        <input type ="number" name="score2" matInput cdkFocusInitial (input) = "handleInputChange()"
           [(ngModel)]="data.set.t2_points" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>{{ data.match.team1 }}</mat-label>
-        <input type ="number" name="score1" matInput cdkFocusInitial (input) = "input_changed()"
+        <input type ="number" name="score1" matInput cdkFocusInitial (input) = "handleInputChange()"
           [(ngModel)]="data.set.t1_points" />
       </mat-form-field>
     </div>
