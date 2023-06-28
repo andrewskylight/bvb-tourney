@@ -1,10 +1,14 @@
 [
   {
-      "group": "A",
-      "teams": ["Barry/Tsura","Danil/Andriy","Dima/Val", "Bogdan/VladKh"]
-  },
-  {
-    "group": "B",
-    "teams": ["Art/VladL","Fedya/VladK","Mina/Sergey", "Vitya/Max"]
+    "group": "A",
+    "teams": [
+      "Olena/Vlad",
+      "Tashi/Dima",
+      "Katy/Pavel",
+      "Anna/Mina",
+      "Daria/Halif",
+      "Karina/Barry",
+      "Sam/Andriy "
+    ]
   }
 ]

@@ -45,10 +45,12 @@ export class GroupsComponent {
   }
 
   test() {
-    //alert(this.groups[0].teams[0])
-    let stats = new GroupStats(this.groups, this.matchSchema);
-    stats.consumeAllMatches(this.matches);
-    console.log(stats.toStr());
+    alert(this.matchService.AuthenticatedEmail);
+
+
+    // let stats = new GroupStats(this.groups, this.matchSchema);
+    // stats.consumeAllMatches(this.matches);
+    // console.log(stats.toStr());
   }
 
 }

@@ -4,6 +4,7 @@ export interface IMatch {
   team1: string;
   team2: string;
   sets: ISet[];
+  editable?:boolean;
 }
 
 export interface ISet {
@@ -22,4 +23,9 @@ export interface ISetSchema {
 export interface IGroup {
   group: string;
   teams: string[];
+}
+
+export interface ITeam{
+  name: string;
+  email: string;
 }
