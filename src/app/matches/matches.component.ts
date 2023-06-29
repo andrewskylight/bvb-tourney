@@ -7,12 +7,11 @@ import { SetDialogComponent, SetDialogData } from '../set-dialog/set-dialog.comp
 
 import { MatchService } from '../match.service';
 
-import { IGroup, IMatch, ISet } from '../shared/interfaces';
+import { IGroup, ISet, ITeam } from '../shared/interfaces';
 import setSchema from '../api/setSchema.json';
 
 
 import { Match } from '../shared/match';
-import { Set } from '../shared/set';
 
 @Component({
   selector: 'app-matches',
@@ -23,19 +22,23 @@ export class MatchesComponent {
 
   Groups: IGroup[] = groupsData;
   //Matches: IMatch[] = matchesData;
-  teams: String[] = [];
+  teams: ITeam[];
   matches: Match[];
   selectedTeam = "All";
 
   constructor(private dialog: MatDialog, private matchService: MatchService) {
-    groupsData.forEach(row => {
-      row.teams.forEach(team => {
-        this.teams.push(team)
-      });
-    });
+    // groupsData.forEach(row => {
+    //   row.teams.forEach(team => {
+    //     this.teams.push(team)
+    //   });
+    // });
   }
 
   ngOnInit(): void {
+    this.matchService.getTeams()
+    .subscribe(teams => {
+      this.teams = teams;});
+
     this.matchService.getMatches()
       .subscribe(matches => {
         this.matches = matches;
@@ -43,11 +46,31 @@ export class MatchesComponent {
   }
 
   initMatches(){
-    this.matches.forEach(match => {
+    this.matches.forEach(
+      match => {
       let matchHelper = new Match(match, setSchema);
-      matchHelper.AddSetIfNeeded()}
-      );
+      matchHelper.AddSetIfNeeded();
+      matchHelper.setEditable(this.getTeamEmail(match.team1), this.getTeamEmail(match.team2),this.matchService.AuthenticatedEmail, this.matchService.AdminEmail);
+
+    });
   }
+
+  getTeamEmail(teamName:string):string{
+    if (teamName == "")
+      return "";
+
+    for(let i=0; i<this.teams.length; i++){
+      if (this.teams[i].name == teamName)
+        return this.teams[i].email;
+    }
+    return "";
+  }
+
+  isEditable(match: Match):boolean{
+    let mh = new Match(match, setSchema);
+    return mh.isEditable();
+  }
+
 
   swapTeams(match: Match): boolean {
     return this.selectedTeam == match.team2;
@@ -63,7 +86,6 @@ export class MatchesComponent {
       result = true;
 
     return result;
-
   }
 
   getTeam1(match: Match): String {
@@ -164,15 +186,9 @@ export class MatchesComponent {
 
       //for some reason angular thinks it's still an interface and not a class, hence the workaround
       let match = new Match (result.match, setSchema);
-      match.AddSetIfNeeded();
 
-      // if (match.isTieBreakerRequired())
-      //   result.match.sets.push(match.GenTieBreakerSet());
-      // else
-      // {
-      //   if (match.hasTieBreakerSet() && !match.isTieBreakerRequired())
-      //     result.match.sets.pop();
-      // }
+      match.RemoveSetIfNeeded();
+      match.AddSetIfNeeded();
 
       this.matchService.updateMatch(result.match).subscribe();
     });

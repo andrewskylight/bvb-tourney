@@ -1,6 +1,6 @@
 <label for='teams'>Choose a team:&nbsp;</label>
 <select name="teams" id="teams" [(ngModel)]="selectedTeam">
-  <option *ngFor='let team of teams'>{{ team }}</option>
+  <option *ngFor='let team of teams'>{{ team.name }}</option>
   <option>All</option>
 </select>
 
@@ -12,8 +12,10 @@
     <tr *ngIf="displayRow(match)">
       <td class="teamcol"></td>
       <td *ngFor='let set of match.sets; let i = index'>
-        <!-- <button mat-flat-button color="primary" (click)="editSet(match, set, swapTeams(match))"> -->
-        <button type="button" class="btn btn-primary" (click)="editSet(match, set, swapTeams(match))">
+        <button type="button" class="btn btn-primary"
+          (click)="editSet(match, set, swapTeams(match))"
+          [disabled]="!isEditable(match)"
+        >
           S{{ set.setNo }}
         </button>
       </td>

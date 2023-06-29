@@ -4,21 +4,25 @@
     "group": "A",
     "team1": "Olena/Vlad",
     "team2": "Tashi/Dima",
-    "sets": []
+    "sets": [
+      { "setNo": 1, "t1_points": 21, "t2_points": 11 }
+    ]
   },
   {
     "id": 1,
     "group": "A",
     "team1": "Olena/Vlad",
     "team2": "Katy/Pavel",
-    "sets": []
+    "sets": [
+    ]
   },
   {
     "id": 2,
     "group": "A",
     "team1": "Olena/Vlad",
     "team2": "Anna/Mina",
-    "sets": []
+    "sets": [
+    ]
   },
   {
     "id": 3,
@@ -38,7 +42,7 @@
     "id": 5,
     "group": "A",
     "team1": "Olena/Vlad",
-    "team2": "Sam/Andriy ",
+    "team2": "Sam/Andriy",
     "sets": []
   },
   {
@@ -73,7 +77,7 @@
     "id": 10,
     "group": "A",
     "team1": "Tashi/Dima",
-    "team2": "Sam/Andriy ",
+    "team2": "Sam/Andriy",
     "sets": []
   },
   {
@@ -101,7 +105,7 @@
     "id": 14,
     "group": "A",
     "team1": "Katy/Pavel",
-    "team2": "Sam/Andriy ",
+    "team2": "Sam/Andriy",
     "sets": []
   },
   {
@@ -122,7 +126,7 @@
     "id": 17,
     "group": "A",
     "team1": "Anna/Mina",
-    "team2": "Sam/Andriy ",
+    "team2": "Sam/Andriy",
     "sets": []
   },
   {
@@ -136,14 +140,14 @@
     "id": 19,
     "group": "A",
     "team1": "Daria/Halif",
-    "team2": "Sam/Andriy ",
+    "team2": "Sam/Andriy",
     "sets": []
   },
   {
     "id": 20,
     "group": "A",
     "team1": "Karina/Barry",
-    "team2": "Sam/Andriy ",
+    "team2": "Sam/Andriy",
     "sets": []
   }
 ]

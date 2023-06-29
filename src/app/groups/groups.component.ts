@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { MatchService } from '../match.service';
 
-import { IMatch, IGroup } from '../shared/interfaces';
+import { IMatch, IGroup, ISetSchema } from '../shared/interfaces';
 import { GroupStats } from '../shared/groupStats';
+
+import { SetSchema } from '../shared/setSchema';
 
 import groupsData from '../api/groups.json';
 
@@ -15,33 +17,44 @@ export class GroupsComponent {
 
   public matches: IMatch[];
   public groups: IGroup[];
+  public setSchema: ISetSchema[];
   public groupsDirect = groupsData;
   public stats: GroupStats;
-  private matchSchema = "BO3";    //todo: implement matchSchema
+  public hasTieBreaker = false;
 
   displayedColumns: string[] = ['Name', 'M', 'W', 'L', 'Pts', 'Set R', 'PW', 'PL', 'Rank'];
 
   constructor(private matchService: MatchService) { }
 
   ngOnInit() {
+    this.matchService.getSetSchema()
+    .subscribe(setSchema => this.setSetSchema(setSchema));
+
     this.matchService.getGroups()
-      .subscribe(groups => this.getGroups(groups));
+      .subscribe(groups => this.setGroups(groups));
 
     this.matchService.getMatches()
-      .subscribe(matches => this.getMatches(matches));
+      .subscribe(matches => this.setMatches(matches));
+
   }
 
-  getMatches(matches: IMatch[]) {
+  setMatches(matches: IMatch[]) {
     this.matches = matches;
     if (this.groups != undefined && this.stats.isEmpty())
       this.stats.consumeAllMatches(this.matches);
   }
 
-  getGroups(groups: IGroup[]) {
+  setGroups(groups: IGroup[]) {
     this.groups = groups;
-    this.stats = new GroupStats(this.groups, this.matchSchema);
+    this.stats = new GroupStats(this.groups, this.setSchema);
     if (this.matches != undefined && this.stats.isEmpty())
       this.stats.consumeAllMatches(this.matches);
+  }
+
+  setSetSchema(setSchema: ISetSchema[]){
+    this.setSchema = setSchema;
+    let sh = new SetSchema(setSchema);
+    this.hasTieBreaker = sh.hasTieBreaker();
   }
 
   test() {

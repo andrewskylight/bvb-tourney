@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { IMatch, IGroup, ITeam } from './shared/interfaces';
+import { IMatch, IGroup, ITeam, ISetSchema } from './shared/interfaces';
 import { Match } from './shared/match';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import groupsData from '../app/api/groups.json';
 import teamsData from '../app/api/teams.json';
+import setSchema from '../app/api/setSchema.json';
 
 
 @Injectable({
@@ -17,7 +18,8 @@ export class MatchService {
 
   private MatchesUrl = 'api/matches';  // URL to web api
   private GroupsUrl = 'api/groups';
-  public AuthenticatedEmail = "test@test.com";
+  public AuthenticatedEmail = "vladislav.letsko@gmail.com";
+  public AdminEmail = "tsura2003@gmail.com";
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -44,6 +46,11 @@ export class MatchService {
 
   getTeams(): Observable<ITeam[]> {
     const output = of(teamsData);
+    return output;
+  }
+
+  getSetSchema(): Observable<ISetSchema[]> {
+    const output = of(setSchema);
     return output;
   }
 

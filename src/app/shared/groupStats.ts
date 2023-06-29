@@ -1,43 +1,55 @@
 import { IGroup, IMatch, ISet } from "./interfaces";
-
-//TODO: matchSchema from db
+import { ISetSchema } from "./interfaces";
+import { SetSchema } from "./setSchema";
+import { Match } from "./match";
 
 class TeamWithStats {
   teamName: string;
   winCount = 0;
   lossCount = 0;
   matchCount = 0;
+  setsWon = 0;
+  setsLost = 0;
   setRatio = 0;
   groupPointCount = 0;
   pointsScored = 0;
   pointsGiven = 0;
   rank = 0;
 
-  constructor(teamName: string){
+  constructor(teamName: string) {
     this.teamName = teamName;
   }
 
-  addSet(pointsScored: number, pointsGiven: number){
+  addSet(pointsScored: number, pointsGiven: number) {
+    if (pointsScored == 0 && pointsGiven == 0)
+      return;
+
     this.pointsScored += pointsScored;
     this.pointsGiven += pointsGiven;
+
+    if (pointsScored > pointsGiven)
+      this.setsWon++;
+    else
+      this.setsLost++;
   }
 
-  addWin(){
-    this.winCount++;
+  addWin(count = 1) {
+    this.winCount += count;
   }
 
-  addLoss(){
-    this.lossCount++;
+  addLoss(count = 1) {
+    this.lossCount += count;
   }
 
-  calcStats(){
+  calcStats() {
 
     this.matchCount = this.winCount + this.lossCount;
-    if (this.lossCount != 0)
-        this.setRatio = this.round(this.winCount/this.lossCount,2);
+
+    if (this.setsLost != 0)
+      this.setRatio = this.round(this.setsWon / this.setsLost, 2);
     else {
-      if (this.winCount != 0)
-        this.setRatio = this.winCount;
+      if (this.setsWon != 0)
+        this.setRatio = this.setsWon;
     }
 
     this.groupPointCount = this.winCount * 3 + this.lossCount;
@@ -45,7 +57,7 @@ class TeamWithStats {
     this.calcRank();
   }
 
-  calcRank(){
+  calcRank() {
     //rank calc: 0,1234,567
     //0 - group points count
     //1234 - set ratio
@@ -66,7 +78,7 @@ class TeamWithStats {
   toStr(): string {
     let output = "";
 
-    output += this.teamName.padEnd(20," ") + " ";
+    output += this.teamName.padEnd(20, " ") + " ";
     output += this.matchCount.toString().padEnd(2, " ") + " ";
     output += this.winCount.toString().padEnd(2, " ") + " ";
     output += this.lossCount.toString().padEnd(2, " ") + " ";
@@ -81,87 +93,94 @@ class TeamWithStats {
   }
 }
 
-class GroupWithStats{
+class GroupWithStats {
 
   groupName: string;
   teams: TeamWithStats[] = [];
   parent: GroupStats;
 
-  constructor(groupName: string, teamNames: string[], parent: GroupStats){
+  constructor(groupName: string, teamNames: string[], parent: GroupStats) {
     this.addGroup(groupName, teamNames);
     this.parent = parent;
   }
 
-  addGroup(groupName: string, teamNames: string[]){
+  addGroup(groupName: string, teamNames: string[]) {
     this.groupName = groupName;
     this.addTeams(teamNames);
   }
 
-  addTeams(teamNames: string[]){
+  addTeams(teamNames: string[]) {
     teamNames.forEach(teamName => {
       this.teams.push(new TeamWithStats(teamName))
     });
   }
 
+
+
   consumeMatch(match: IMatch) {
+    /* CHECK CONDITIONS */
+    let mh = new Match(match, this.parent._setSchema.setSchema);
+    if (!mh.IsMatchFinished())
+      return;
+
     let team1 = this.findTeam(match.team1);
     let team2 = this.findTeam(match.team2);
 
-    //againstTeam1
-    let setWonCount = 0;
-    let setLostCount = 0;
+    let t1_setWonCount = 0;
+    let t1_setLostCount = 0;
 
-    for (let set of match.sets){
-      this.consumeSet(team1, team2, set);
+    for (let set of match.sets) {
+      if (set.t1_points == 0 && set.t2_points == 0)
+        continue;
 
-      if (this.parent.getMatchSchema() == "BO3"){
-        if (set.t1_points > set.t2_points)
-          setWonCount++;
-        else
-          setLostCount++;
-      }
+      let team1Won = this.consumeSet(team1, team2, set);
+      if (team1Won)
+        t1_setWonCount++;
+      else
+        t1_setLostCount++;
     }
 
-    if (setWonCount > setLostCount){
-      team1.addWin();
-      team2.addLoss();
-    }
-    else if(setWonCount < setLostCount){
-      team1.addLoss();
-      team2.addWin();
-    }
-
-  }
-
-  consumeSet(team1: TeamWithStats, team2: TeamWithStats, set: ISet){
-    team1.addSet(set.t1_points, set.t2_points);
-    team2.addSet(set.t2_points, set.t1_points);
-
-    if (this.parent.getMatchSchema() != "BO3"){
-      if (set.t1_points > set.t2_points){
+    //handle assignment of wins
+    // - tie breaker rules => count entire match as win
+    if (this.parent.hasTieBreaker()) {
+      if (t1_setWonCount > t1_setLostCount) {
         team1.addWin();
         team2.addLoss();
-      }
-      else{
+      } else if (t1_setWonCount < t1_setLostCount) {
         team1.addLoss();
         team2.addWin();
       }
+    // - no tie breaker => each set won is a win
+    }else {
+      team1.addWin(t1_setWonCount);
+      team1.addLoss(t1_setLostCount);
+
+      team2.addWin(t1_setLostCount);
+      team2.addLoss(t1_setWonCount);
     }
+
   }
 
-  findTeam(teamName: string): TeamWithStats{
+  consumeSet(team1: TeamWithStats, team2: TeamWithStats, set: ISet): boolean {
+    team1.addSet(set.t1_points, set.t2_points);
+    team2.addSet(set.t2_points, set.t1_points);
+
+    return set.t1_points > set.t2_points;
+  }
+
+  findTeam(teamName: string): TeamWithStats {
     return this.teams.find(item => item.teamName === teamName)!;
   }
 
-  sortTeams(){
-    this.teams.sort((a,b) => (a.rank < b.rank) ? 1: -1);
+  sortTeams() {
+    this.teams.sort((a, b) => (a.rank < b.rank) ? 1 : -1);
   }
 
-  calcStatsAllTeams(){
+  calcStatsAllTeams() {
     this.teams.forEach(team => team.calcStats());
   }
 
-  toStr(): string{
+  toStr(): string {
     let output = "";
 
     output = "Name                 M  W  L  Pt Rat  PG  PL  Rank \n"
@@ -176,27 +195,26 @@ class GroupWithStats{
 export class GroupStats {
   public groups: GroupWithStats[] = [];
   private _isEmpty = true;
-  private matchSchema = "";
+  public _setSchema: SetSchema;
 
-  constructor(groups: IGroup[], matchSchema: string)
-    {
-      this.matchSchema = matchSchema;
-      groups.forEach(group => {
-        this.groups.push(new GroupWithStats(group.group, group.teams, this))
-      });
-    }
+  constructor(groups: IGroup[], setSchema: ISetSchema[]) {
+    this._setSchema = new SetSchema(setSchema);
+    groups.forEach(group => {
+      this.groups.push(new GroupWithStats(group.group, group.teams, this))
+    });
+  }
 
-  isEmpty(): boolean{
+  isEmpty(): boolean {
     return this._isEmpty;
   }
 
-  getMatchSchema():string{
-    return this.matchSchema;
+  hasTieBreaker(): boolean {
+    return this._setSchema.hasTieBreaker();
   }
 
-  consumeAllMatches(matches: IMatch[]){
+  consumeAllMatches(matches: IMatch[]) {
 
-    for (let match of matches){
+    for (let match of matches) {
       let groupIndex = match.group.charCodeAt(0) - 65;
       this.groups[groupIndex].consumeMatch(match);
     }
@@ -207,11 +225,11 @@ export class GroupStats {
 
   }
 
-  recalcStatsAllTeams(){
+  recalcStatsAllTeams() {
     this.groups.forEach(group => group.calcStatsAllTeams());
   }
 
-  sortGroupsByRank(){
+  sortGroupsByRank() {
     this.groups.forEach(group => group.sortTeams());
   }
 
@@ -223,6 +241,3 @@ export class GroupStats {
     return output;
   }
 }
-
-let message = 'hello';
-console.log(message);

@@ -30,10 +30,21 @@ export class Match implements IMatch {
     this.setSchema = new SetSchema(setSchema);
   }
 
-  private removeSetIfNeeded(): void{
+  public setEditable(team1Email: string, team2Email: string, authEmail: string, adminEmail: string) {
+    this.baseMatch.editable = team1Email == authEmail || team2Email == authEmail
+      || authEmail == adminEmail;
+  }
 
+  public isEditable(): boolean {
+    if (this.baseMatch.editable == undefined)
+      return true;
+
+    return this.baseMatch.editable;
+  }
+
+  public RemoveSetIfNeeded(): void {
     /* CHECK CONDITIONS */
-    if(!this.tieBreakerAlreadyAdded() ||!this.allMandatorySetsEntered())
+    if (!this.tieBreakerAlreadyAdded() || !this.allMandatorySetsEntered())
       return;
 
     //tie-breaker has been already added && all mandatory sets has been entered
@@ -41,7 +52,7 @@ export class Match implements IMatch {
     let t2Wins = 0;
 
     //count wins in mandatory sets
-    for (let i = 0; i < this.baseMatch.sets.length; i++){
+    for (let i = 0; i < this.baseMatch.sets.length; i++) {
       if (this.setSchema.setSchema[i].tieBreaker)
         continue;
 
@@ -56,43 +67,56 @@ export class Match implements IMatch {
   }
 
   public AddSetIfNeeded(): void {
-    this.removeSetIfNeeded();
-
-    /* CHECK CONDITIONS */
-    if (!this.allMandatorySetsEntered()) {
+    if(!this.IsMatchFinished() && !this.isLastSetEmpty()) {
       this.AddSet();
-      return;
     }
-
-    //if setSchema does not contain a tieBraker or tie breaker already added
-    if (!this.canAddTieBreakerSet())
-      return;
-
-    let t1Wins = 0;
-    let t2Wins = 0;
-
-    [t1Wins, t2Wins] = this.getWinCount();
-
-    if (t1Wins == t2Wins)
-      this.AddSet();
   }
 
-  private getWinCount(): [number, number] {
-    let t1Wins = 0;
-    let t2Wins = 0;
 
-    //loop through each set
-    for (let i = 0; i < this.sets.length; i++) {
-      let t1_points = this.sets[i].t1_points;
-      let t2_points = this.sets[i].t2_points;
+  public IsMatchFinished(): boolean {
+    if (this.areSetsEmptyOrZero())
+      return false;
 
-      if (t1_points > t2_points)
-        t1Wins++;
-      else
-        t2Wins++;
+    if (this.setSchema.hasTieBreaker())
+      return this.isThereAWinnerInTieBreakerSets();
+    else
+      return this.baseMatch.sets.length == this.setSchema.setSchema.length && !this.isLastSetEmpty();
+
+  }
+
+  private areSetsEmptyOrZero(): boolean {
+    return this.baseMatch.sets == undefined || this.baseMatch.sets.length == 0;
+  }
+
+  private isThereAWinnerInTieBreakerSets(): boolean {
+    /* CHECK CONDITIONS */
+    if (this.areSetsEmptyOrZero() || this.isLastSetEmpty() || this.sets.length < this.setSchema.setSchema.length -1)
+      return false;
+
+    let t1WonSets = 0;
+    let t2WonSets = 0;
+
+    let i = 0;
+    while (i < this.sets.length) {
+      if (this.sets[i].t1_points > this.sets[i].t2_points)
+        {t1WonSets++;}
+      else if (this.sets[i].t1_points < this.sets[i].t2_points)
+        {t2WonSets++;}
+
+      i++;
     }
 
-    return [t1Wins, t2Wins];
+    if (t1WonSets != t2WonSets)
+      return true;
+    else
+      return false;
+  }
+
+  private isLastSetEmpty(): boolean {
+    if (this.sets == undefined || this.sets.length == 0)
+      return false;
+    else
+      return this.sets[this.sets.length - 1].IsSetEmpty();
   }
 
   private allMandatorySetsEntered(): boolean {
@@ -126,4 +150,6 @@ export class Match implements IMatch {
   private tieBreakerAlreadyAdded(): boolean {
     return this.setSchema.hasTieBreaker() && this.baseMatch.sets.length == this.setSchema.setSchema.length;
   }
+
+
 }
