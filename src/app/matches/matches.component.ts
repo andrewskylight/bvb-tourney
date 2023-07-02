@@ -7,7 +7,7 @@ import { SetDialogComponent, SetDialogData } from '../set-dialog/set-dialog.comp
 
 import { MatchService } from '../match.service';
 
-import { IGroup, ISet, ITeam } from '../shared/interfaces';
+import { IGroup, ISet, ITeam, IMatch } from '../shared/interfaces';
 import setSchema from '../api/setSchema.json';
 
 
@@ -23,7 +23,7 @@ export class MatchesComponent {
   Groups: IGroup[] = groupsData;
   //Matches: IMatch[] = matchesData;
   teams: ITeam[];
-  matches: Match[];
+  matches: IMatch[];
   selectedTeam = "All";
 
   constructor(private dialog: MatDialog, private matchService: MatchService) {
@@ -51,7 +51,6 @@ export class MatchesComponent {
       let matchHelper = new Match(match, setSchema);
       matchHelper.AddSetIfNeeded();
       matchHelper.setEditable(this.getTeamEmail(match.team1), this.getTeamEmail(match.team2),this.matchService.AuthenticatedEmail, this.matchService.AdminEmail);
-
     });
   }
 
@@ -66,17 +65,17 @@ export class MatchesComponent {
     return "";
   }
 
-  isEditable(match: Match):boolean{
+  isEditable(match: IMatch):boolean{
     let mh = new Match(match, setSchema);
     return mh.isEditable();
   }
 
 
-  swapTeams(match: Match): boolean {
+  swapTeams(match: IMatch): boolean {
     return this.selectedTeam == match.team2;
   }
 
-  displayRow(match: Match): boolean {
+  displayRow(match: IMatch): boolean {
     let result: boolean;
     result = false;
 
@@ -88,21 +87,21 @@ export class MatchesComponent {
     return result;
   }
 
-  getTeam1(match: Match): String {
+  getTeam1(match: IMatch): String {
     if (match.team2 == this.selectedTeam)
       return match.team2;
     else
       return match.team1;
   }
 
-  getTeam2(match: Match): String {
+  getTeam2(match: IMatch): String {
     if (match.team2 == this.selectedTeam)
       return match.team1;
     else
       return match.team2;
   }
 
-  getResult(match: Match): String {
+  getResult(match: IMatch): String {
     let result = "TBD";
     let setWonCount = 0;
     let setLostCount = 0;
@@ -131,7 +130,7 @@ export class MatchesComponent {
     return result;
   }
 
-  getTeamResults(match: Match, teamNo: Number): String {
+  getTeamResults(match: IMatch, teamNo: Number): String {
     let output = "";
 
     if (match.sets.length == 0)
@@ -154,7 +153,7 @@ export class MatchesComponent {
     return output;
   }
 
-  editSet(match: Match, set: ISet, swapTeams: boolean): void {
+  editSet(match: IMatch, set: ISet, swapTeams: boolean): void {
     const dialogRef = this.dialog.open(SetDialogComponent, {
       width: '245px',
       position: {top:'0px'} ,

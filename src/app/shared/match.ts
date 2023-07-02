@@ -18,8 +18,10 @@ export class Match implements IMatch {
     this.team1 = match.team1;
     this.team2 = match.team2;
 
-    for (let i = 0; i < match.sets.length; i++) {
-      this.sets.push(new Set(match.sets[i].setNo, match.sets[i].t1_points, match.sets[i].t2_points));
+    if (match.sets != undefined){
+      for (let i = 0; i < match.sets.length; i++) {
+        this.sets.push(new Set(match.sets[i].setNo, match.sets[i].t1_points, match.sets[i].t2_points));
+      }
     }
 
     this.setSchema = new SetSchema(setSchema);
@@ -131,7 +133,10 @@ export class Match implements IMatch {
   }
 
   private AddSet(): void {
-    this.baseMatch.sets.push(new Set(this.sets.length + 1));
+    if (this.baseMatch.sets == undefined){
+      this.baseMatch.sets = [];
+    }
+      this.baseMatch.sets.push(new Set(this.sets.length + 1));
   }
 
   private AddTieBreakerSet(): void {

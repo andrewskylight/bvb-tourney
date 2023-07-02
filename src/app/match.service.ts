@@ -16,7 +16,7 @@ import setSchema from '../app/api/setSchema.json';
 })
 export class MatchService {
 
-  private MatchesUrl = 'api/matches';  // URL to web api
+  private MatchesUrl = 'https://tourney-f6031-default-rtdb.firebaseio.com/matches.json';  // URL to web api
   private GroupsUrl = 'api/groups';
   public AuthenticatedEmail = "vladislav.letsko@gmail.com";
   public AdminEmail = "tsura2003@gmail.com";
@@ -56,11 +56,11 @@ export class MatchService {
 
 
   /** GET Matches from the server */
-  getMatches(): Observable<Match[]> {
-    return this.http.get<Match[]>(this.MatchesUrl)
+  getMatches(): Observable<IMatch[]> {
+    return this.http.get<IMatch[]>(this.MatchesUrl)
       .pipe(
         tap(_ => this.log('fetched Matches')),
-        catchError(this.handleError<Match[]>('getMatches', []))
+        catchError(this.handleError<IMatch[]>('getMatches', []))
       );
   }
 
@@ -122,16 +122,24 @@ export class MatchService {
   }
 
   /** PUT: update the Match on the server */
-  updateMatch(Match: Match): Observable<any> {
+  updateMatch(Match: IMatch): Observable<any> {
     console.log('updateMatch:' +
       Match.id + " " +
       Match.team1 + " " +
       Match.team2 + " " +
       Match.sets[0].t1_points + " " + Match.sets[0].t2_points);
 
-    return this.http.put(this.MatchesUrl, Match, this.httpOptions).pipe(
+    //const updateURL = this.MatchesUrl + '/' + Match.id + '/sets/0.json';
+    //const updateURL = "https://tourney-f6031-default-rtdb.firebaseio.com/matches/0/sets/0/.json";
+
+    const updateURL = "https://tourney-f6031-default-rtdb.firebaseio.com/matches/" + Match.id + "/sets.json";
+    return this.http.put(updateURL, Match.sets, this.httpOptions).pipe(
       tap(_ => this.log(`updated Match id=${Match.id}`)),
       catchError(this.handleError<any>('updateMatch'))
+
+      // return this.http.put(this.MatchesUrl, Match, this.httpOptions).pipe(
+      //   tap(_ => this.log(`updated Match id=${Match.id}`)),
+      //   catchError(this.handleError<any>('updateMatch'))
     );
   }
 
