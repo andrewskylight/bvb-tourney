@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatchService } from '../match.service';
 import { ITeam } from '../shared/interfaces';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ export class LoginComponent {
   email: string;
   //password: string;
 
-  constructor(private matchService: MatchService) {
+  constructor(private matchService: MatchService, private router: Router) {
   }
 
   ngOnInit(){
@@ -30,6 +31,7 @@ export class LoginComponent {
     if (this.isEmailFound(this.email)){
       this.result = "Email found; Login successful";
       this.matchService.setAuthEmail(this.email);
+      this.router.navigate(['/matches']);
     }
     else
       this.result = "Email not found; Cannot edit; Can view";

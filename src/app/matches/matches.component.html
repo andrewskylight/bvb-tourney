@@ -1,5 +1,5 @@
-<div class="settings-container">
-  <div class="row">
+<div class="row">
+  <div class="settings-container">
     <div class="col-md-3">
       <label for='teams'>Choose a team:&nbsp;</label>
       <select name="teams" id="teams" [(ngModel)]="this.selectedTeam" (ngModelChange)="onTeamSelectionChange()">
@@ -7,11 +7,19 @@
         <option>All</option>
       </select>
     </div>
-    </div>
-    <div class="row settings-container">
+  </div>
+  <div class="settings-container">
     <div class="col-md-2">
-      <input type="checkbox" name="unFinishedMatchesCheckBox" id="unFinishedMatchesCheckBox" [(ngModel)]="showIPGMatchesOnly">
+      <input type="checkbox" name="unFinishedMatchesCheckBox" id="unFinishedMatchesCheckBox"
+        [(ngModel)]="showIPGMatchesOnly">
       <label for="unFinishedMatchesCheckBox">IPG Matches Only</label>
+    </div>
+  </div>
+</div>
+<div class="row alert" *ngIf="!anyoneLoggedIn()">
+  <div class="col-md-3">
+    <div class="alert alert-warning" role="alert">
+      No one is logged in! Login to edit data.
     </div>
   </div>
 </div>
@@ -20,7 +28,7 @@
 </div>
 <!-- <div *ngFor='let match of matches$ | async'></div> -->
 <table class="table table-borderless">
-  <div *ngFor='let match of matches$ | async'>
+  <div *ngFor='let match of matches'>
     <tr *ngIf="showMatch(match)">
       <td class="teamcol"></td>
       <td *ngFor='let set of match.sets; let i = index'>
@@ -39,7 +47,6 @@
         <div *ngIf="swapTeams(match)">
           {{ set.t2_points }}
         </div>
-
       </td>
     </tr>
 

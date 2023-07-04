@@ -25,8 +25,8 @@ export class MatchService {
   //public AuthenticatedEmail = "vladislav.letsko@gmail.com";
   private AuthenticatedEmail = "";
   private AdminEmail = "tsura2003@gmail.com";
-  public selectedTeam = "All";
-  public isDebug = false;
+  public selectedTeam = "";
+  public isDebug = true;
 
   matches$ = this.db.object('matches').valueChanges() as Observable<IMatch[]>;
 
@@ -50,6 +50,10 @@ export class MatchService {
 
   isAdminLoggedIn():boolean{
     return this.AuthenticatedEmail == this.AdminEmail;
+  }
+
+  anyoneLogggedIn():boolean{
+    return this.AuthenticatedEmail != "";
   }
 
   isAdminEmail(email: string):boolean{

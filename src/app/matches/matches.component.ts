@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import groupsData from '../api/groups.json';
 
-
 import { MatDialog } from '@angular/material/dialog';
 import { SetDialogComponent, SetDialogData } from '../set-dialog/set-dialog.component';
 
@@ -9,7 +8,6 @@ import { MatchService } from '../match.service';
 
 import { IGroup, ISet, ITeam, IMatch } from '../shared/interfaces';
 import setSchema from '../api/setSchema.json';
-
 
 import { Match } from '../shared/match';
 
@@ -24,7 +22,7 @@ export class MatchesComponent {
 
   teams: ITeam[];
   matches: IMatch[];
-  selectedTeam = "All";
+  selectedTeam = "";
   public showIPGMatchesOnly = false;
   matches$;
 
@@ -53,8 +51,7 @@ export class MatchesComponent {
       this.matches$ = this.matchService.matches$;
     }
 
-
-    this.selectedTeam = this.matchService.selectedTeam;
+    this.initSelectedTeam();
   }
 
   initMatches() {
@@ -63,6 +60,25 @@ export class MatchesComponent {
         let matchHelper = new Match(match, setSchema);
         matchHelper.AddSetIfNeeded();
       });
+  }
+
+  initSelectedTeam() {
+    if (this.matchService.selectedTeam == "") {
+      if (this.matchService.getAuthEmail() == "" || this.matchService.isAdminLoggedIn())
+        this.matchService.selectedTeam = "All";
+      else
+        this.matchService.selectedTeam = this.getTeamNameByEmail(this.matchService.getAuthEmail());
+    }
+
+    this.selectedTeam = this.matchService.selectedTeam;
+  }
+
+  getTeamNameByEmail(email: string): string {
+    for (let i = 0; i < this.teams.length; i++) {
+      if (email == this.teams[i].email)
+        return this.teams[i].name;
+    }
+    return "";
   }
 
   getTeamEmail(teamName: string): string {
@@ -77,7 +93,7 @@ export class MatchesComponent {
   }
 
   isEditable(match: IMatch): boolean {
-    if(this.matchService.isAdminLoggedIn())
+    if (this.matchService.isAdminLoggedIn())
       return true;
 
     let team1Email = this.getTeamEmail(match.team1);
@@ -106,7 +122,7 @@ export class MatchesComponent {
         return (match.team1 == this.selectedTeam || match.team2 == this.selectedTeam);
       else
         return isMatchIPG(match) &&
-                (match.team1 == this.selectedTeam || match.team2 == this.selectedTeam);
+          (match.team1 == this.selectedTeam || match.team2 == this.selectedTeam);
     }
 
     function isMatchIPG(match: IMatch): boolean {
@@ -183,6 +199,10 @@ export class MatchesComponent {
       }
     }
     return output;
+  }
+
+  anyoneLoggedIn():boolean{
+    return this.matchService.anyoneLogggedIn();
   }
 
   editSet(match: IMatch, set: ISet, swapTeams: boolean): void {
