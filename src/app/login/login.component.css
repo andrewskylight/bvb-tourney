@@ -1,0 +1,15 @@
+.wider-field {
+  width: 350px;
+}
+
+.login-container {
+  margin-bottom: 20px; /* Add margin at the bottom of the container */
+}
+
+.result {
+  margin-top: 20px; /* Add margin at the top of the result section */
+}
+
+.form-field {
+  margin-bottom: 10px; /* Add margin at the bottom of each form field */
+}

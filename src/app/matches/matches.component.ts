@@ -77,12 +77,14 @@ export class MatchesComponent {
   }
 
   isEditable(match: IMatch): boolean {
+    if(this.matchService.isAdminLoggedIn())
+      return true;
+
     let team1Email = this.getTeamEmail(match.team1);
     let team2Email = this.getTeamEmail(match.team2);
-    let authEmail = this.matchService.AuthenticatedEmail;
-    let adminEmail = this.matchService.AdminEmail;
+    let authEmail = this.matchService.getAuthEmail();
 
-    return team1Email == authEmail || team2Email == authEmail || authEmail == adminEmail;
+    return team1Email == authEmail || team2Email == authEmail;
   }
 
 

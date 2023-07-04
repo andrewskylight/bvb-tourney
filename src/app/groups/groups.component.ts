@@ -68,9 +68,6 @@ export class GroupsComponent {
   }
 
   test() {
-    alert(this.matchService.AuthenticatedEmail);
-
-
     // let stats = new GroupStats(this.groups, this.matchSchema);
     // stats.consumeAllMatches(this.matches);
     // console.log(stats.toStr());

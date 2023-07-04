@@ -27,13 +27,15 @@ import { MatchesComponent } from './matches/matches.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from '../environments/environment';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SetDialogComponent,
     GroupsComponent,
-    MatchesComponent
+    MatchesComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
