@@ -1,155 +1,262 @@
-[
+{"matches":[
   {
     "id": 0,
-    "group": "A",
+    "group": "B",
     "team1": "Olena/Vlad",
-    "team2": "Tashi/Dima",
+    "team2": "Katy/Pavel",
     "sets": [
-      { "setNo": 1, "t1_points": 21, "t2_points": 11 },
-      { "setNo": 2, "t1_points": 11, "t2_points": 21 },
-      { "setNo": 3, "t1_points": 15, "t2_points": 11 }
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
     ]
   },
   {
     "id": 1,
-    "group": "A",
+    "group": "B",
     "team1": "Olena/Vlad",
-    "team2": "Katy/Pavel",
+    "team2": "Anna/Mina",
     "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
     ]
   },
   {
     "id": 2,
-    "group": "A",
+    "group": "B",
     "team1": "Olena/Vlad",
-    "team2": "Anna/Mina",
+    "team2": "Karina/Barry",
     "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
     ]
   },
   {
     "id": 3,
-    "group": "A",
+    "group": "B",
     "team1": "Olena/Vlad",
-    "team2": "Daria/Halif",
-    "sets": []
+    "team2": "Sam/Andriy",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 4,
-    "group": "A",
-    "team1": "Olena/Vlad",
-    "team2": "Karina/Barry",
-    "sets": []
+    "group": "B",
+    "team1": "Katy/Pavel",
+    "team2": "Anna/Mina",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 5,
-    "group": "A",
-    "team1": "Olena/Vlad",
-    "team2": "Sam/Andriy",
-    "sets": []
+    "group": "B",
+    "team1": "Katy/Pavel",
+    "team2": "Karina/Barry",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 6,
-    "group": "A",
-    "team1": "Tashi/Dima",
-    "team2": "Katy/Pavel",
-    "sets": []
+    "group": "B",
+    "team1": "Katy/Pavel",
+    "team2": "Sam/Andriy",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 7,
-    "group": "A",
-    "team1": "Tashi/Dima",
-    "team2": "Anna/Mina",
-    "sets": []
+    "group": "B",
+    "team1": "Anna/Mina",
+    "team2": "Karina/Barry",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 8,
-    "group": "A",
-    "team1": "Tashi/Dima",
-    "team2": "Daria/Halif",
-    "sets": []
+    "group": "B",
+    "team1": "Anna/Mina",
+    "team2": "Sam/Andriy",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 9,
-    "group": "A",
-    "team1": "Tashi/Dima",
-    "team2": "Karina/Barry",
-    "sets": []
+    "group": "B",
+    "team1": "Karina/Barry",
+    "team2": "Sam/Andriy",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 10,
     "group": "A",
     "team1": "Tashi/Dima",
-    "team2": "Sam/Andriy",
-    "sets": []
+    "team2": "Daria/Halif",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 11,
     "group": "A",
-    "team1": "Katy/Pavel",
-    "team2": "Anna/Mina",
-    "sets": []
+    "team1": "Tashi/Dima",
+    "team2": "Winnie/Max",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 12,
     "group": "A",
-    "team1": "Katy/Pavel",
-    "team2": "Daria/Halif",
-    "sets": []
+    "team1": "Tashi/Dima",
+    "team2": "Tamara/Tsura",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 13,
     "group": "A",
-    "team1": "Katy/Pavel",
-    "team2": "Karina/Barry",
-    "sets": []
+    "team1": "Tashi/Dima",
+    "team2": "Cris/Carlos",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 14,
     "group": "A",
-    "team1": "Katy/Pavel",
-    "team2": "Sam/Andriy",
-    "sets": []
+    "team1": "Daria/Halif",
+    "team2": "Winnie/Max",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 15,
     "group": "A",
-    "team1": "Anna/Mina",
-    "team2": "Daria/Halif",
-    "sets": []
+    "team1": "Daria/Halif",
+    "team2": "Tamara/Tsura",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 16,
     "group": "A",
-    "team1": "Anna/Mina",
-    "team2": "Karina/Barry",
-    "sets": []
+    "team1": "Daria/Halif",
+    "team2": "Cris/Carlos",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 17,
     "group": "A",
-    "team1": "Anna/Mina",
-    "team2": "Sam/Andriy",
-    "sets": []
+    "team1": "Winnie/Max",
+    "team2": "Tamara/Tsura",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 18,
     "group": "A",
-    "team1": "Daria/Halif",
-    "team2": "Karina/Barry",
-    "sets": []
+    "team1": "Winnie/Max",
+    "team2": "Cris/Carlos",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   },
   {
     "id": 19,
     "group": "A",
-    "team1": "Daria/Halif",
-    "team2": "Sam/Andriy",
-    "sets": []
-  },
-  {
-    "id": 20,
-    "group": "A",
-    "team1": "Karina/Barry",
-    "team2": "Sam/Andriy",
-    "sets": []
+    "team1": "Tamara/Tsura",
+    "team2": "Cris/Carlos",
+    "sets": [
+      {
+        "setNo": 1,
+        "t1_points": 0,
+        "t2_points": 0
+      }
+    ]
   }
-]
+]}

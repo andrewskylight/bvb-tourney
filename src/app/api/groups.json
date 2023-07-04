@@ -2,13 +2,21 @@
   {
     "group": "A",
     "teams": [
-      "Olena/Vlad",
       "Tashi/Dima",
+      "Daria/Halif",
+      "Winnie/Max",
+      "Tamara/Tsura",
+      "Cris/Carlos"
+    ]
+  },
+  {
+    "group": "B",
+    "teams": [
+      "Olena/Vlad",
       "Katy/Pavel",
       "Anna/Mina",
-      "Daria/Halif",
       "Karina/Barry",
-      "Sam/Andriy "
+      "Sam/Andriy"
     ]
   }
 ]

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import groupsData from '../api/groups.json';
-import matchesData from '../api/matches.json';
+
 
 import { MatDialog } from '@angular/material/dialog';
 import { SetDialogComponent, SetDialogData } from '../set-dialog/set-dialog.component';
@@ -21,10 +21,12 @@ import { Match } from '../shared/match';
 export class MatchesComponent {
 
   Groups: IGroup[] = groupsData;
-  //Matches: IMatch[] = matchesData;
+
   teams: ITeam[];
   matches: IMatch[];
   selectedTeam = "All";
+  public showIPGMatchesOnly = false;
+  matches$;
 
   constructor(private dialog: MatDialog, private matchService: MatchService) {
     // groupsData.forEach(row => {
@@ -36,38 +38,51 @@ export class MatchesComponent {
 
   ngOnInit(): void {
     this.matchService.getTeams()
-    .subscribe(teams => {
-      this.teams = teams;});
+      .subscribe(teams => {
+        this.teams = teams;
+      });
 
-    this.matchService.getMatches()
-      .subscribe(matches => {
-        this.matches = matches;
-        this.initMatches();});
+    if (this.matchService.isDebug) {
+      this.matchService.getMatches()
+        .subscribe(matches => {
+          this.matches = matches;
+          this.initMatches();
+        });
+
+    } else {
+      this.matches$ = this.matchService.matches$;
+    }
+
+
+    this.selectedTeam = this.matchService.selectedTeam;
   }
 
-  initMatches(){
+  initMatches() {
     this.matches.forEach(
       match => {
-      let matchHelper = new Match(match, setSchema);
-      matchHelper.AddSetIfNeeded();
-      matchHelper.setEditable(this.getTeamEmail(match.team1), this.getTeamEmail(match.team2),this.matchService.AuthenticatedEmail, this.matchService.AdminEmail);
-    });
+        let matchHelper = new Match(match, setSchema);
+        matchHelper.AddSetIfNeeded();
+      });
   }
 
-  getTeamEmail(teamName:string):string{
+  getTeamEmail(teamName: string): string {
     if (teamName == "")
       return "";
 
-    for(let i=0; i<this.teams.length; i++){
+    for (let i = 0; i < this.teams.length; i++) {
       if (this.teams[i].name == teamName)
         return this.teams[i].email;
     }
     return "";
   }
 
-  isEditable(match: IMatch):boolean{
-    let mh = new Match(match, setSchema);
-    return mh.isEditable();
+  isEditable(match: IMatch): boolean {
+    let team1Email = this.getTeamEmail(match.team1);
+    let team2Email = this.getTeamEmail(match.team2);
+    let authEmail = this.matchService.AuthenticatedEmail;
+    let adminEmail = this.matchService.AdminEmail;
+
+    return team1Email == authEmail || team2Email == authEmail || authEmail == adminEmail;
   }
 
 
@@ -75,16 +90,27 @@ export class MatchesComponent {
     return this.selectedTeam == match.team2;
   }
 
-  displayRow(match: IMatch): boolean {
-    let result: boolean;
-    result = false;
+  showMatch(match: IMatch): boolean {
+    if (this.selectedTeam == "All") {
+      if (!this.showIPGMatchesOnly)
+        //show all matches
+        return true;
+      else {
+        //show unfinished matches for all teams
+        return isMatchIPG(match);
+      }
+    } else {
+      if (!this.showIPGMatchesOnly)
+        return (match.team1 == this.selectedTeam || match.team2 == this.selectedTeam);
+      else
+        return isMatchIPG(match) &&
+                (match.team1 == this.selectedTeam || match.team2 == this.selectedTeam);
+    }
 
-    result = (match.team1 == this.selectedTeam || match.team2 == this.selectedTeam)
-
-    if (this.selectedTeam == "All")
-      result = true;
-
-    return result;
+    function isMatchIPG(match: IMatch): boolean {
+      let mh = new Match(match, setSchema);
+      return !mh.IsMatchFinished();
+    }
   }
 
   getTeam1(match: IMatch): String {
@@ -130,6 +156,10 @@ export class MatchesComponent {
     return result;
   }
 
+  onTeamSelectionChange() {
+    this.matchService.selectedTeam = this.selectedTeam;
+  }
+
   getTeamResults(match: IMatch, teamNo: Number): String {
     let output = "";
 
@@ -156,7 +186,7 @@ export class MatchesComponent {
   editSet(match: IMatch, set: ISet, swapTeams: boolean): void {
     const dialogRef = this.dialog.open(SetDialogComponent, {
       width: '245px',
-      position: {top:'0px'} ,
+      position: { top: '0px' },
       data: {
         match,
         set,
@@ -184,7 +214,7 @@ export class MatchesComponent {
       // }
 
       //for some reason angular thinks it's still an interface and not a class, hence the workaround
-      let match = new Match (result.match, setSchema);
+      let match = new Match(result.match, setSchema);
 
       match.RemoveSetIfNeeded();
       match.AddSetIfNeeded();

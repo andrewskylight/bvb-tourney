@@ -23,8 +23,8 @@ export class InMemoryDataService implements InMemoryDbService {
 
     let matches: Match[] = [];
 
-    for (let i=0;i<matchesJSON.length;i++){
-      matches.push(new Match(matchesJSON[i],setSchemaJSON));
+    for (let i=0;i<matchesJSON.matches.length;i++){
+      matches.push(new Match(matchesJSON.matches[i],setSchemaJSON));
     }
 
     return {matches};

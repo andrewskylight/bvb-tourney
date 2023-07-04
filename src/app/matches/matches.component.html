@@ -1,26 +1,36 @@
-<label for='teams'>Choose a team:&nbsp;</label>
-<select name="teams" id="teams" [(ngModel)]="selectedTeam">
-  <option *ngFor='let team of teams'>{{ team.name }}</option>
-  <option>All</option>
-</select>
-
+<div class="settings-container">
+  <div class="row">
+    <div class="col-md-3">
+      <label for='teams'>Choose a team:&nbsp;</label>
+      <select name="teams" id="teams" [(ngModel)]="this.selectedTeam" (ngModelChange)="onTeamSelectionChange()">
+        <option *ngFor='let team of teams'>{{ team.name }}</option>
+        <option>All</option>
+      </select>
+    </div>
+    </div>
+    <div class="row settings-container">
+    <div class="col-md-2">
+      <input type="checkbox" name="unFinishedMatchesCheckBox" id="unFinishedMatchesCheckBox" [(ngModel)]="showIPGMatchesOnly">
+      <label for="unFinishedMatchesCheckBox">IPG Matches Only</label>
+    </div>
+  </div>
+</div>
 <div class="col-md-3">
   <hr>
 </div>
+<!-- <div *ngFor='let match of matches$ | async'></div> -->
 <table class="table table-borderless">
   <div *ngFor='let match of matches'>
-    <tr *ngIf="displayRow(match)">
+    <tr *ngIf="showMatch(match)">
       <td class="teamcol"></td>
       <td *ngFor='let set of match.sets; let i = index'>
-        <button type="button" class="btn btn-primary"
-          (click)="editSet(match, set, swapTeams(match))"
-          [disabled]="!isEditable(match)"
-        >
+        <button type="button" class="btn btn-primary" (click)="editSet(match, set, swapTeams(match))"
+          [disabled]="!isEditable(match)">
           S{{ set.setNo }}
         </button>
       </td>
     </tr>
-    <tr *ngIf="displayRow(match)">
+    <tr *ngIf="showMatch(match)">
       <td class="teamcol"> {{getTeam1(match)}}</td>
       <td *ngFor='let set of match.sets; let i = index'>
         <div *ngIf="!swapTeams(match)">
@@ -33,7 +43,7 @@
       </td>
     </tr>
 
-    <tr *ngIf="displayRow(match)">
+    <tr *ngIf="showMatch(match)">
       <td class="teamcol">{{getTeam2(match)}}</td>
       <td *ngFor='let set of match.sets; let i = index'>
         <div *ngIf="!swapTeams(match)">
@@ -45,7 +55,7 @@
       </td>
     </tr>
     <div class="col-md-3">
-      <hr *ngIf="displayRow(match)">
+      <hr *ngIf="showMatch(match)">
     </div>
   </div>
 </table>

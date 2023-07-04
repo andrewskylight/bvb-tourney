@@ -68,8 +68,6 @@ class TeamWithStats {
       500 + (this.pointsScored - this.pointsGiven);
   }
 
-
-
   round(input: number, places: number): number {
     let noOfPlaces = places * 10;
     return Math.round((input + Number.EPSILON) * noOfPlaces) / noOfPlaces;

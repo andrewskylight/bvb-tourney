@@ -3,10 +3,12 @@ import { MatchService } from '../match.service';
 
 import { IMatch, IGroup, ISetSchema } from '../shared/interfaces';
 import { GroupStats } from '../shared/groupStats';
+import matchesData from '../api/matches.json';
 
 import { SetSchema } from '../shared/setSchema';
 
 import groupsData from '../api/groups.json';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-groups',
@@ -21,6 +23,7 @@ export class GroupsComponent {
   public groupsDirect = groupsData;
   public stats: GroupStats;
   public hasTieBreaker = false;
+  public matches$: Observable<IMatch[]>;
 
   displayedColumns: string[] = ['Name', 'M', 'W', 'L', 'Pts', 'Set R', 'PW', 'PL', 'Rank'];
 
@@ -33,9 +36,16 @@ export class GroupsComponent {
     this.matchService.getGroups()
       .subscribe(groups => this.setGroups(groups));
 
+    //  this.matches$ = this.matchService.matches$;
+
+    // this.matches$.subscribe(
+    //   matches => {
+    //     if (this.groups != undefined && this.stats.isEmpty())
+    //       this.stats.consumeAllMatches(matches);
+    //   }
+    // )
     this.matchService.getMatches()
       .subscribe(matches => this.setMatches(matches));
-
   }
 
   setMatches(matches: IMatch[]) {

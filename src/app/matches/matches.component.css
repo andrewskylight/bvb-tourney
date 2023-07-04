@@ -13,3 +13,7 @@ table td:nth-child(4) { text-align: end; }
   left: 0;
   top: auto;
 }
+
+.settings-container {
+  margin-top: 5px; /* Adjust the value as needed */
+}

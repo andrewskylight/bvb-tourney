@@ -9,6 +9,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import groupsData from '../app/api/groups.json';
 import teamsData from '../app/api/teams.json';
 import setSchema from '../app/api/setSchema.json';
+import matchesData from '../app/api/matches.json';
+
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 
 
 @Injectable({
@@ -16,17 +19,25 @@ import setSchema from '../app/api/setSchema.json';
 })
 export class MatchService {
 
+  public Matches: IMatch[] = matchesData.matches;
   private MatchesUrl = 'https://tourney-f6031-default-rtdb.firebaseio.com/matches.json';  // URL to web api
   private GroupsUrl = 'api/groups';
-  public AuthenticatedEmail = "vladislav.letsko@gmail.com";
+  //public AuthenticatedEmail = "vladislav.letsko@gmail.com";
+  public AuthenticatedEmail = "tsura2003@gmail.com";
   public AdminEmail = "tsura2003@gmail.com";
+  public selectedTeam = "All";
+  public isDebug = true;
+
+  matches$ = this.db.object('matches').valueChanges() as Observable<IMatch[]>;
 
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+
   };
 
   constructor(
-    private http: HttpClient)
+    private http: HttpClient,
+    private db: AngularFireDatabase)
     { }
 
   setAuthEmail(email: string){
@@ -54,9 +65,13 @@ export class MatchService {
     return output;
   }
 
-
   /** GET Matches from the server */
   getMatches(): Observable<IMatch[]> {
+    if(this.isDebug){
+      const output = of(this.Matches);
+      return output;
+    }
+
     return this.http.get<IMatch[]>(this.MatchesUrl)
       .pipe(
         tap(_ => this.log('fetched Matches')),

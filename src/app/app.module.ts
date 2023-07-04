@@ -24,6 +24,10 @@ import {MatTableModule} from '@angular/material/table';
 import { AppRoutingModule } from './app-routing.module';
 import { MatchesComponent } from './matches/matches.component';
 
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { environment } from '../environments/environment';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,7 +55,9 @@ import { MatchesComponent } from './matches/matches.component';
     // HttpClientInMemoryWebApiModule.forRoot(
     //   InMemoryDataService, { dataEncapsulation: false }
     // ),
-    AppRoutingModule
+    AppRoutingModule,
+    AngularFireModule.initializeApp(environment.fireRealTime),
+    AngularFireDatabaseModule
   ],
   providers: [],
   bootstrap: [AppComponent]

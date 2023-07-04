@@ -1,156 +1,155 @@
-{"matches":[
-  {
-    "id": 0,
-    "group": "A",
-    "team1": "Olena/Vlad",
-    "team2": "Tashi/Dima",
-    "sets": [
-      { "setNo": 1, "t1_points": 21, "t2_points": 11 },
-      { "setNo": 2, "t1_points": 11, "t2_points": 21 },
-      { "setNo": 3, "t1_points": 15, "t2_points": 11 }
-    ]
-  },
-  {
-    "id": 1,
-    "group": "A",
-    "team1": "Olena/Vlad",
-    "team2": "Katy/Pavel",
-    "sets": [
-    ]
-  },
-  {
-    "id": 2,
-    "group": "A",
-    "team1": "Olena/Vlad",
-    "team2": "Anna/Mina",
-    "sets": [
-    ]
-  },
-  {
-    "id": 3,
-    "group": "A",
-    "team1": "Olena/Vlad",
-    "team2": "Daria/Halif",
-    "sets": []
-  },
-  {
-    "id": 4,
-    "group": "A",
-    "team1": "Olena/Vlad",
-    "team2": "Karina/Barry",
-    "sets": []
-  },
-  {
-    "id": 5,
-    "group": "A",
-    "team1": "Olena/Vlad",
-    "team2": "Sam/Andriy",
-    "sets": []
-  },
-  {
-    "id": 6,
-    "group": "A",
-    "team1": "Tashi/Dima",
-    "team2": "Katy/Pavel",
-    "sets": []
-  },
-  {
-    "id": 7,
-    "group": "A",
-    "team1": "Tashi/Dima",
-    "team2": "Anna/Mina",
-    "sets": []
-  },
-  {
-    "id": 8,
-    "group": "A",
-    "team1": "Tashi/Dima",
-    "team2": "Daria/Halif",
-    "sets": []
-  },
-  {
-    "id": 9,
-    "group": "A",
-    "team1": "Tashi/Dima",
-    "team2": "Karina/Barry",
-    "sets": []
-  },
-  {
-    "id": 10,
-    "group": "A",
-    "team1": "Tashi/Dima",
-    "team2": "Sam/Andriy",
-    "sets": []
-  },
-  {
-    "id": 11,
-    "group": "A",
-    "team1": "Katy/Pavel",
-    "team2": "Anna/Mina",
-    "sets": []
-  },
-  {
-    "id": 12,
-    "group": "A",
-    "team1": "Katy/Pavel",
-    "team2": "Daria/Halif",
-    "sets": []
-  },
-  {
-    "id": 13,
-    "group": "A",
-    "team1": "Katy/Pavel",
-    "team2": "Karina/Barry",
-    "sets": []
-  },
-  {
-    "id": 14,
-    "group": "A",
-    "team1": "Katy/Pavel",
-    "team2": "Sam/Andriy",
-    "sets": []
-  },
-  {
-    "id": 15,
-    "group": "A",
-    "team1": "Anna/Mina",
-    "team2": "Daria/Halif",
-    "sets": []
-  },
-  {
-    "id": 16,
-    "group": "A",
-    "team1": "Anna/Mina",
-    "team2": "Karina/Barry",
-    "sets": []
-  },
-  {
-    "id": 17,
-    "group": "A",
-    "team1": "Anna/Mina",
-    "team2": "Sam/Andriy",
-    "sets": []
-  },
-  {
-    "id": 18,
-    "group": "A",
-    "team1": "Daria/Halif",
-    "team2": "Karina/Barry",
-    "sets": []
-  },
-  {
-    "id": 19,
-    "group": "A",
-    "team1": "Daria/Halif",
-    "team2": "Sam/Andriy",
-    "sets": []
-  },
-  {
-    "id": 20,
-    "group": "A",
-    "team1": "Karina/Barry",
-    "team2": "Sam/Andriy",
-    "sets": []
-  }
-]
+{
+  "matches": [
+    {
+      "id": 0,
+      "group": "A",
+      "team1": "Olena/Vlad",
+      "team2": "Tashi/Dima",
+      "sets": [
+        { "setNo": 1, "t1_points": 21, "t2_points": 11 },
+        { "setNo": 2, "t1_points": 11, "t2_points": 21 },
+        { "setNo": 3, "t1_points": 15, "t2_points": 11 }
+      ]
+    },
+    {
+      "id": 1,
+      "group": "A",
+      "team1": "Olena/Vlad",
+      "team2": "Katy/Pavel",
+      "sets": []
+    },
+    {
+      "id": 2,
+      "group": "A",
+      "team1": "Olena/Vlad",
+      "team2": "Anna/Mina",
+      "sets": []
+    },
+    {
+      "id": 3,
+      "group": "A",
+      "team1": "Olena/Vlad",
+      "team2": "Daria/Halif",
+      "sets": []
+    },
+    {
+      "id": 4,
+      "group": "A",
+      "team1": "Olena/Vlad",
+      "team2": "Karina/Barry",
+      "sets": []
+    },
+    {
+      "id": 5,
+      "group": "A",
+      "team1": "Olena/Vlad",
+      "team2": "Sam/Andriy",
+      "sets": []
+    },
+    {
+      "id": 6,
+      "group": "A",
+      "team1": "Tashi/Dima",
+      "team2": "Katy/Pavel",
+      "sets": []
+    },
+    {
+      "id": 7,
+      "group": "A",
+      "team1": "Tashi/Dima",
+      "team2": "Anna/Mina",
+      "sets": []
+    },
+    {
+      "id": 8,
+      "group": "A",
+      "team1": "Tashi/Dima",
+      "team2": "Daria/Halif",
+      "sets": []
+    },
+    {
+      "id": 9,
+      "group": "A",
+      "team1": "Tashi/Dima",
+      "team2": "Karina/Barry",
+      "sets": []
+    },
+    {
+      "id": 10,
+      "group": "A",
+      "team1": "Tashi/Dima",
+      "team2": "Sam/Andriy",
+      "sets": []
+    },
+    {
+      "id": 11,
+      "group": "A",
+      "team1": "Katy/Pavel",
+      "team2": "Anna/Mina",
+      "sets": []
+    },
+    {
+      "id": 12,
+      "group": "A",
+      "team1": "Katy/Pavel",
+      "team2": "Daria/Halif",
+      "sets": []
+    },
+    {
+      "id": 13,
+      "group": "A",
+      "team1": "Katy/Pavel",
+      "team2": "Karina/Barry",
+      "sets": []
+    },
+    {
+      "id": 14,
+      "group": "A",
+      "team1": "Katy/Pavel",
+      "team2": "Sam/Andriy",
+      "sets": []
+    },
+    {
+      "id": 15,
+      "group": "A",
+      "team1": "Anna/Mina",
+      "team2": "Daria/Halif",
+      "sets": []
+    },
+    {
+      "id": 16,
+      "group": "A",
+      "team1": "Anna/Mina",
+      "team2": "Karina/Barry",
+      "sets": []
+    },
+    {
+      "id": 17,
+      "group": "A",
+      "team1": "Anna/Mina",
+      "team2": "Sam/Andriy",
+      "sets": []
+    },
+    {
+      "id": 18,
+      "group": "A",
+      "team1": "Daria/Halif",
+      "team2": "Karina/Barry",
+      "sets": []
+    },
+    {
+      "id": 19,
+      "group": "A",
+      "team1": "Daria/Halif",
+      "team2": "Sam/Andriy",
+      "sets": []
+    },
+    {
+      "id": 20,
+      "group": "A",
+      "team1": "Karina/Barry",
+      "team2": "Sam/Andriy",
+      "sets": []
+    }
+  ]
 }

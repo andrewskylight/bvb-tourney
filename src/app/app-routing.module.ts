@@ -6,7 +6,7 @@ import { MatchesComponent } from './matches/matches.component';
 import { GroupsComponent } from './groups/groups.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/groups', pathMatch: 'full' },
+  { path: '', redirectTo: '/matches', pathMatch: 'full' },
   { path: 'groups', component: GroupsComponent },
   { path: 'matches', component: MatchesComponent }
 ];
