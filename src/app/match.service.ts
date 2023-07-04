@@ -26,7 +26,7 @@ export class MatchService {
   private AuthenticatedEmail = "";
   private AdminEmail = "tsura2003@gmail.com";
   public selectedTeam = "";
-  public isDebug = true;
+  public isDebug = false;
 
   matches$ = this.db.object('matches').valueChanges() as Observable<IMatch[]>;
 
