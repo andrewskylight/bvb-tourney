@@ -45,7 +45,7 @@ export class LoginComponent {
 
     //loop through teams' emails
     for (let i=0; i<this.teams.length; i++){
-      if (this.teams[i].email == email)
+      if (this.teams[i].email.toUpperCase() == email.toUpperCase())
         return true;
     }
     return false;

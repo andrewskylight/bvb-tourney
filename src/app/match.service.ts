@@ -49,7 +49,7 @@ export class MatchService {
   }
 
   isAdminLoggedIn():boolean{
-    return this.AuthenticatedEmail == this.AdminEmail;
+    return this.AuthenticatedEmail.toUpperCase() == this.AdminEmail.toUpperCase();
   }
 
   anyoneLogggedIn():boolean{
@@ -57,7 +57,7 @@ export class MatchService {
   }
 
   isAdminEmail(email: string):boolean{
-    return this.AdminEmail == email;
+    return this.AdminEmail.toUpperCase() == email.toUpperCase();
   }
 
   getGroups(): Observable<IGroup[]> {

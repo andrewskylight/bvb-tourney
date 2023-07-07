@@ -75,7 +75,7 @@ export class MatchesComponent {
 
   getTeamNameByEmail(email: string): string {
     for (let i = 0; i < this.teams.length; i++) {
-      if (email == this.teams[i].email)
+      if (email.toUpperCase() == this.teams[i].email.toUpperCase())
         return this.teams[i].name;
     }
     return "";
@@ -96,16 +96,16 @@ export class MatchesComponent {
     if (this.matchService.isAdminLoggedIn())
       return true;
 
-    let team1Email = this.getTeamEmail(match.team1);
-    let team2Email = this.getTeamEmail(match.team2);
-    let authEmail = this.matchService.getAuthEmail();
+    let team1Email = this.getTeamEmail(match.team1).toUpperCase();
+    let team2Email = this.getTeamEmail(match.team2).toUpperCase();
+    let authEmail = this.matchService.getAuthEmail().toUpperCase();
 
     return team1Email == authEmail || team2Email == authEmail;
   }
 
 
   swapTeams(match: IMatch): boolean {
-    return this.selectedTeam == match.team2;
+    return this.selectedTeam == match.team2
   }
 
   showMatch(match: IMatch): boolean {

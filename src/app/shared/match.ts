@@ -33,8 +33,10 @@ export class Match implements IMatch {
   }
 
   public setEditable(team1Email: string, team2Email: string, authEmail: string, adminEmail: string) {
-    this.baseMatch.editable = team1Email == authEmail || team2Email == authEmail
-      || authEmail == adminEmail;
+    this.baseMatch.editable =
+      team1Email.toUpperCase() == authEmail.toUpperCase() ||
+      team2Email.toUpperCase() == authEmail.toUpperCase() ||
+      authEmail.toUpperCase() == adminEmail.toUpperCase();
   }
 
   public isEditable(): boolean {
