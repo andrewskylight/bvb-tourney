@@ -1,37 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import groupsData from '../api/groups.json';
 
 import { MatDialog } from '@angular/material/dialog';
 import { SetDialogComponent, SetDialogData } from '../set-dialog/set-dialog.component';
 
-import { MatchService } from '../match.service';
+import { MatchService } from './match.service';
 
 import { IGroup, ISet, ITeam, IMatch } from '../shared/interfaces';
 import setSchema from '../api/setSchema.json';
 
 import { Match } from '../shared/match';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-matches',
   templateUrl: './matches.component.html',
   styleUrls: ['./matches.component.css']
 })
-export class MatchesComponent {
+export class MatchesComponent implements OnInit, OnDestroy {
 
   Groups: IGroup[] = groupsData;
 
   teams: ITeam[];
   matches: IMatch[];
+  matchSubscription: Subscription;
   selectedTeam = "";
   public showIPGMatchesOnly = false;
   matches$;
 
+
   constructor(private dialog: MatDialog, private matchService: MatchService) {
-    // groupsData.forEach(row => {
-    //   row.teams.forEach(team => {
-    //     this.teams.push(team)
-    //   });
-    // });
   }
 
   ngOnInit(): void {
@@ -40,18 +38,18 @@ export class MatchesComponent {
         this.teams = teams;
       });
 
-    if (this.matchService.isDebug) {
-      this.matchService.getMatches()
-        .subscribe(matches => {
-          this.matches = matches;
-          this.initMatches();
-        });
+    this.matchSubscription = this.matchService.matchesChanged.subscribe(
+      matches => (this.matches = matches));
 
-    } else {
-      this.matches$ = this.matchService.matches$;
-    }
+     this.matchService.fetchMatches();
 
     this.initSelectedTeam();
+
+    //this.matchService.getMatches().subscribe(matches => {this.matches = matches});
+  }
+
+  ngOnDestroy() {
+    this.matchSubscription.unsubscribe();
   }
 
   initMatches() {
@@ -201,7 +199,7 @@ export class MatchesComponent {
     return output;
   }
 
-  anyoneLoggedIn():boolean{
+  anyoneLoggedIn(): boolean {
     return this.matchService.anyoneLogggedIn();
   }
 

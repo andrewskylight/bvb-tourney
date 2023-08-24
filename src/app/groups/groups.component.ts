@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatchService } from '../match.service';
+import { MatchService } from '../matches/match.service';
 
 import { IMatch, IGroup, ISetSchema } from '../shared/interfaces';
 import { GroupStats } from '../shared/groupStats';
@@ -8,7 +8,7 @@ import matchesData from '../api/matches.json';
 import { SetSchema } from '../shared/setSchema';
 
 import groupsData from '../api/groups.json';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-groups',
@@ -17,11 +17,12 @@ import { Observable } from 'rxjs';
 })
 export class GroupsComponent {
 
-  public matches: IMatch[];
+  matches: IMatch[];
+  matchSubscription: Subscription;
   public groups: IGroup[];
   public setSchema: ISetSchema[];
   public groupsDirect = groupsData;
-  public stats: GroupStats;
+  public stats: GroupStats = new GroupStats();
   public hasTieBreaker = false;
   public matches$: Observable<IMatch[]>;
 
@@ -34,43 +35,42 @@ export class GroupsComponent {
     .subscribe(setSchema => this.setSetSchema(setSchema));
 
     this.matchService.getGroups()
-      .subscribe(groups => this.setGroups(groups));
+    .subscribe(groups => this.setGroups(groups));
 
-    //  this.matches$ = this.matchService.matches$;
+    this.matchService.fetchMatches();
 
-    // this.matches$.subscribe(
-    //   matches => {
-    //     if (this.groups != undefined && this.stats.isEmpty())
-    //       this.stats.consumeAllMatches(matches);
-    //   }
-    // )
-    this.matchService.getMatches()
-      .subscribe(matches => this.setMatches(matches));
+    this.matchSubscription = this.matchService.matchesChanged.subscribe(
+        matches => this.onMatchesChanged(matches));
   }
 
-  setMatches(matches: IMatch[]) {
+  ngOnDestroy(){
+    this.matchSubscription.unsubscribe();
+  }
+
+  refreshGroupStats():void {
+    this.stats.consumeAllMatches(this.matches);
+  }
+
+  onMatchesChanged(matches: IMatch[]):void{
     this.matches = matches;
-    if (this.groups != undefined && this.stats.isEmpty())
-      this.stats.consumeAllMatches(this.matches);
+    this.refreshGroupStats();
   }
 
   setGroups(groups: IGroup[]) {
     this.groups = groups;
-    this.stats = new GroupStats(this.groups, this.setSchema);
-    if (this.matches != undefined && this.stats.isEmpty())
-      this.stats.consumeAllMatches(this.matches);
+    this.stats.setGroups(groups);
   }
 
   setSetSchema(setSchema: ISetSchema[]){
     this.setSchema = setSchema;
+    this.stats.setSetSchema(setSchema);
     let sh = new SetSchema(setSchema);
     this.hasTieBreaker = sh.hasTieBreaker();
   }
 
   test() {
-    // let stats = new GroupStats(this.groups, this.matchSchema);
-    // stats.consumeAllMatches(this.matches);
-    // console.log(stats.toStr());
+    //console.log(this.matches);
+    this.refreshGroupStats();
   }
 
 }

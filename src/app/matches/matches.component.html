@@ -28,7 +28,7 @@
 </div>
 <!-- <div *ngFor='let match of matches$ | async'></div> -->
 <table class="table table-borderless">
-  <div *ngFor='let match of matches$ | async'>
+  <div *ngFor='let match of matches'>
     <tr *ngIf="showMatch(match)">
       <td class="teamcol"></td>
       <td *ngFor='let set of match.sets; let i = index'>

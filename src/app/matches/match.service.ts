@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { IMatch, IGroup, ITeam, ISetSchema } from './shared/interfaces';
-import { Match } from './shared/match';
+import { IMatch, IGroup, ITeam, ISetSchema } from '../shared/interfaces';
+import { Match } from '../shared/match';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import groupsData from '../app/api/groups.json';
-import teamsData from '../app/api/teams.json';
-import setSchema from '../app/api/setSchema.json';
-import matchesData from '../app/api/matches.json';
+import groupsData from '../api/groups.json';
+import teamsData from '../api/teams.json';
+import setSchema from '../api/setSchema.json';
+import matchesData from '../api/matches.json';
 
-import { AngularFireDatabase } from '@angular/fire/compat/database';
-
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 
 @Injectable({
   providedIn: 'root'
@@ -20,19 +19,19 @@ import { AngularFireDatabase } from '@angular/fire/compat/database';
 export class MatchService {
 
   public Matches: IMatch[] = matchesData.matches;
-  private MatchesUrl = 'https://tourney-f6031-default-rtdb.firebaseio.com/matches.json';  // URL to web api
-  private GroupsUrl = 'api/groups';
-  //public AuthenticatedEmail = "vladislav.letsko@gmail.com";
+  private MatchesUrl = 'https://tourney-f6031-default-rtdb.firebaseio.com/';  // URL to web api
   private AuthenticatedEmail = "";
   private AdminEmail = "tsura2003@gmail.com";
   public selectedTeam = "";
   public isDebug = false;
 
+  private matches: IMatch[];
+  matchesChanged = new Subject<IMatch[]>();
+
   matches$ = this.db.object('matches').valueChanges() as Observable<IMatch[]>;
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-
   };
 
   constructor(
@@ -63,13 +62,9 @@ export class MatchService {
   getGroups(): Observable<IGroup[]> {
     const output = of(groupsData);
     return output;
-
-    // return this.http.get<Group[]>(this.GroupsUrl)
-    // .pipe(
-    //   tap(_ => this.log('fetched Groups')),
-    //   catchError(this.handleError<Group[]>('getGroups', []))
-    // );
   }
+
+
 
   getTeams(): Observable<ITeam[]> {
     const output = of(teamsData);
@@ -95,6 +90,20 @@ export class MatchService {
       );
   }
 
+  /** GET Matches from the server: angularfire2 */
+  fetchMatches(){
+    this.db.list('/matches').snapshotChanges()
+    .pipe(
+      map(changes => {
+        // Convert the snapshotChanges array into a regular array of data objects
+        return changes.map(c => ({ key: c.payload.key, ...c.payload.val() as IMatch }));
+      })
+    ).subscribe((matches: IMatch[]) => {
+      this.matches = matches;
+      this.matchesChanged.next([...this.matches]);
+    })
+}
+
   /** GET Match by id. Return `undefined` when id not found */
   getMatchNo404<Data>(id: number): Observable<Match> {
     const url = `${this.MatchesUrl}/?id=${id}`;
@@ -109,29 +118,6 @@ export class MatchService {
       );
   }
 
-  /** GET Match by id. Will 404 if id not found */
-  getMatch(id: number): Observable<Match> {
-    const url = `${this.MatchesUrl}/${id}`;
-    return this.http.get<Match>(url).pipe(
-      tap(_ => this.log(`fetched Match id=${id}`)),
-      catchError(this.handleError<Match>(`getMatch id=${id}`))
-    );
-  }
-
-  /* GET Matches whose name contains search term */
-  searchMatches(term: string): Observable<Match[]> {
-    if (!term.trim()) {
-      // if not search term, return empty Match array.
-      return of([]);
-    }
-    return this.http.get<Match[]>(`${this.MatchesUrl}/?name=${term}`).pipe(
-      tap(x => x.length ?
-         this.log(`found Matches matching "${term}"`) :
-         this.log(`no Matches matching "${term}"`)),
-      catchError(this.handleError<Match[]>('searchMatches', []))
-    );
-  }
-
   //////// Save methods //////////
 
   /** POST: add a new Match to the server */
@@ -139,16 +125,6 @@ export class MatchService {
     return this.http.post<Match>(this.MatchesUrl, Match, this.httpOptions).pipe(
       tap((newMatch: Match) => this.log(`added Match w/ id=${newMatch.id}`)),
       catchError(this.handleError<Match>('addMatch'))
-    );
-  }
-
-  /** DELETE: delete the Match from the server */
-  deleteMatch(id: number): Observable<Match> {
-    const url = `${this.MatchesUrl}/${id}`;
-
-    return this.http.delete<Match>(url, this.httpOptions).pipe(
-      tap(_ => this.log(`deleted Match id=${id}`)),
-      catchError(this.handleError<Match>('deleteMatch'))
     );
   }
 
@@ -167,10 +143,6 @@ export class MatchService {
     return this.http.put(updateURL, Match.sets, this.httpOptions).pipe(
       tap(_ => this.log(`updated Match id=${Match.id}`)),
       catchError(this.handleError<any>('updateMatch'))
-
-      // return this.http.put(this.MatchesUrl, Match, this.httpOptions).pipe(
-      //   tap(_ => this.log(`updated Match id=${Match.id}`)),
-      //   catchError(this.handleError<any>('updateMatch'))
     );
   }
 
@@ -202,3 +174,13 @@ export class MatchService {
     };
   }
 }
+
+// BACK UP //
+/* SAMPLE GET METHOD */
+  // getGroups(): Observable<IGroup[]> {
+  //   return this.http.get<Group[]>(this.GroupsUrl)
+  //   .pipe(
+  //     tap(_ => this.log('fetched Groups')),
+  //     catchError(this.handleError<Group[]>('getGroups', []))
+  //   );
+  // }

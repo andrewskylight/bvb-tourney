@@ -68,6 +68,19 @@ class TeamWithStats {
       500 + (this.pointsScored - this.pointsGiven);
   }
 
+  resetStats() {
+    this.winCount = 0;
+    this.lossCount = 0;
+    this.matchCount = 0;
+    this.setsWon = 0;
+    this.setsLost = 0;
+    this.setRatio = 0;
+    this.groupPointCount = 0;
+    this.pointsScored = 0;
+    this.pointsGiven = 0;
+    this.rank = 0;
+  }
+
   round(input: number, places: number): number {
     let noOfPlaces = places * 10;
     return Math.round((input + Number.EPSILON) * noOfPlaces) / noOfPlaces;
@@ -113,11 +126,9 @@ class GroupWithStats {
     });
   }
 
-
-
   consumeMatch(match: IMatch) {
     /* CHECK CONDITIONS */
-    let mh = new Match(match, this.parent._setSchema.setSchema);
+    let mh = new Match(match, this.parent.setSchema.setSchema);
     if (!mh.IsMatchFinished())
       return;
 
@@ -148,8 +159,8 @@ class GroupWithStats {
         team1.addLoss();
         team2.addWin();
       }
-    // - no tie breaker => each set won is a win
-    }else {
+      // - no tie breaker => each set won is a win
+    } else {
       team1.addWin(t1_setWonCount);
       team1.addLoss(t1_setLostCount);
 
@@ -164,6 +175,10 @@ class GroupWithStats {
     team2.addSet(set.t2_points, set.t1_points);
 
     return set.t1_points > set.t2_points;
+  }
+
+  resetStats(){
+    this.teams.forEach( team => team.resetStats());
   }
 
   findTeam(teamName: string): TeamWithStats {
@@ -191,15 +206,27 @@ class GroupWithStats {
 }
 
 export class GroupStats {
-  public groups: GroupWithStats[] = [];
-  private _isEmpty = true;
-  public _setSchema: SetSchema;
+  public groupsStats: GroupWithStats[] = [];
+  public setSchema: SetSchema;
 
-  constructor(groups: IGroup[], setSchema: ISetSchema[]) {
-    this._setSchema = new SetSchema(setSchema);
+  private _isEmpty = true;
+
+  constructor() { }
+
+  setGroups(groups: IGroup[]): void {
     groups.forEach(group => {
-      this.groups.push(new GroupWithStats(group.group, group.teams, this))
+      this.groupsStats.push(new GroupWithStats(group.group, group.teams, this))
     });
+  }
+
+  resetGroupStats(){
+    this.groupsStats.forEach(group => {
+      group.resetStats();
+    })
+  }
+
+  setSetSchema(setSchema: ISetSchema[]) {
+    this.setSchema = new SetSchema(setSchema);
   }
 
   isEmpty(): boolean {
@@ -207,34 +234,37 @@ export class GroupStats {
   }
 
   hasTieBreaker(): boolean {
-    return this._setSchema.hasTieBreaker();
+    return this.setSchema.hasTieBreaker();
   }
 
   consumeAllMatches(matches: IMatch[]) {
+    if (this.groupsStats == null || this.groupsStats.length == 0 || this.setSchema == null)
+      return;
+
+    this.resetGroupStats()
 
     for (let match of matches) {
       let groupIndex = match.group.charCodeAt(0) - 65;
-      this.groups[groupIndex].consumeMatch(match);
+      this.groupsStats[groupIndex].consumeMatch(match);
     }
 
     this.recalcStatsAllTeams();
     this.sortGroupsByRank();
     this._isEmpty = false;
-
   }
 
   recalcStatsAllTeams() {
-    this.groups.forEach(group => group.calcStatsAllTeams());
+    this.groupsStats.forEach(group => group.calcStatsAllTeams());
   }
 
   sortGroupsByRank() {
-    this.groups.forEach(group => group.sortTeams());
+    this.groupsStats.forEach(group => group.sortTeams());
   }
 
   toStr(): string {
     let output = "";
 
-    this.groups.forEach(group => output += group.toStr());
+    this.groupsStats.forEach(group => output += group.toStr());
 
     return output;
   }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatchService } from '../match.service';
+import { MatchService } from '../matches/match.service';
 import { ITeam } from '../shared/interfaces';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
