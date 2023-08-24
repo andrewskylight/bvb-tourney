@@ -47,6 +47,10 @@ export class MatchService {
     return this.AuthenticatedEmail;
   }
 
+  isLoggedIn():boolean{
+    return this.AuthenticatedEmail == "";
+  }
+
   isAdminLoggedIn():boolean{
     return this.AuthenticatedEmail.toUpperCase() == this.AdminEmail.toUpperCase();
   }
