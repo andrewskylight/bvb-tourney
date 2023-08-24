@@ -61,14 +61,14 @@ export class MatchesComponent implements OnInit, OnDestroy {
   }
 
   initSelectedTeam() {
-    if (this.matchService.selectedTeam == "") {
+    if (this.matchService.getSelectedTeam() == "") {
       if (this.matchService.getAuthEmail() == "" || this.matchService.isAdminLoggedIn())
-        this.matchService.selectedTeam = "All";
+        this.matchService.setSelectedTeam("All");
       else
-        this.matchService.selectedTeam = this.getTeamNameByEmail(this.matchService.getAuthEmail());
+        this.matchService.setSelectedTeam(this.getTeamNameByEmail(this.matchService.getAuthEmail()));
     }
 
-    this.selectedTeam = this.matchService.selectedTeam;
+    this.selectedTeam = this.matchService.getSelectedTeam();
   }
 
   getTeamNameByEmail(email: string): string {
@@ -173,7 +173,7 @@ export class MatchesComponent implements OnInit, OnDestroy {
   }
 
   onTeamSelectionChange() {
-    this.matchService.selectedTeam = this.selectedTeam;
+    this.matchService.setSelectedTeam(this.selectedTeam);
   }
 
   getTeamResults(match: IMatch, teamNo: Number): String {
@@ -200,7 +200,7 @@ export class MatchesComponent implements OnInit, OnDestroy {
   }
 
   anyoneLoggedIn(): boolean {
-    return this.matchService.anyoneLogggedIn();
+    return this.matchService.isLoggedIn();
   }
 
   editSet(match: IMatch, set: ISet, swapTeams: boolean): void {

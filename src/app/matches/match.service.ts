@@ -22,7 +22,7 @@ export class MatchService {
   private MatchesUrl = 'https://tourney-f6031-default-rtdb.firebaseio.com/';  // URL to web api
   private AuthenticatedEmail = "";
   private AdminEmail = "tsura2003@gmail.com";
-  public selectedTeam = "";
+  private selectedTeam = "";
   public isDebug = false;
 
   private matches: IMatch[];
@@ -48,15 +48,11 @@ export class MatchService {
   }
 
   isLoggedIn():boolean{
-    return this.AuthenticatedEmail == "";
+    return this.AuthenticatedEmail != "";
   }
 
   isAdminLoggedIn():boolean{
     return this.AuthenticatedEmail.toUpperCase() == this.AdminEmail.toUpperCase();
-  }
-
-  anyoneLogggedIn():boolean{
-    return this.AuthenticatedEmail != "";
   }
 
   isAdminEmail(email: string):boolean{
@@ -68,11 +64,26 @@ export class MatchService {
     return output;
   }
 
-
-
   getTeams(): Observable<ITeam[]> {
     const output = of(teamsData);
     return output;
+  }
+
+  getSelectedTeam(): string {
+    if (this.selectedTeam != "")
+      return this.selectedTeam;
+
+    if (localStorage.getItem('selectedTeam') != null){
+      this.selectedTeam = localStorage.getItem('selectedTeam');
+      return this.selectedTeam;
+    }
+
+    return "";
+  }
+
+  setSelectedTeam(selectedTeam:string): void {
+    this.selectedTeam = selectedTeam;
+    localStorage.setItem('selectedTeam',selectedTeam);
   }
 
   getSetSchema(): Observable<ISetSchema[]> {
