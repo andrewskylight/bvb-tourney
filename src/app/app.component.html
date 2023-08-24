@@ -1,7 +1,7 @@
 <div class="container">
 <nav>
-  <a routerLink="/logout" *ngIf="this.matchService.isLoggedIn">Logout</a>
-  <a routerLink="/login" *ngIf="!this.matchService.isLoggedIn">Login</a>
+  <a routerLink="/login" *ngIf="!this.matchService.isLoggedIn()">Login</a>
+  <a routerLink="/logout" *ngIf="this.matchService.isLoggedIn()">Logout</a>
   <a routerLink="/matches">Matches</a>
   <a routerLink="/groups">Groups</a>
 </nav>
