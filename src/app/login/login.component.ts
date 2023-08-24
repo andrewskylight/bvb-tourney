@@ -19,17 +19,33 @@ export class LoginComponent {
   constructor(private matchService: MatchService, private router: Router) {
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.matchService.getTeams()
-    .subscribe(teams => {
-      this.teams = teams;
-    });
+      .subscribe(teams => {
+        this.teams = teams;
+        this.returningUser();
+      });
+  }
+
+  returningUser() {
+    let userEmail = this.getEmailFromLocalStorage();
+
+    if (userEmail != null) {
+      this.email = userEmail;
+      this.onSubmit();
+    }
+  }
+
+  getEmailFromLocalStorage(): string | null {
+    // Retrieve the email from local storage
+    return localStorage.getItem('userEmail');
   }
 
   onSubmit() {
     // Perform login logic here
-    if (this.isEmailFound(this.email)){
+    if (this.isEmailFound(this.email)) {
       this.result = "Email found; Login successful";
+      localStorage.setItem('userEmail',this.email);
       this.matchService.setAuthEmail(this.email);
       this.router.navigate(['/matches']);
     }
@@ -38,13 +54,13 @@ export class LoginComponent {
 
   }
 
-  isEmailFound(email: string):boolean{
+  isEmailFound(email: string): boolean {
     //Check Conditions
     if (this.matchService.isAdminEmail(email))
       return true;
 
     //loop through teams' emails
-    for (let i=0; i<this.teams.length; i++){
+    for (let i = 0; i < this.teams.length; i++) {
       if (this.teams[i].email.toUpperCase() == email.toUpperCase())
         return true;
     }
