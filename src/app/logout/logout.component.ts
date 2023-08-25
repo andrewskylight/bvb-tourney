@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatchService } from '../matches/match.service';
+import { LoginService } from '../login/login.service';
 
 @Component({
   selector: 'app-logout',
@@ -8,7 +8,7 @@ import { MatchService } from '../matches/match.service';
   styleUrls: ['./logout.component.css']
 })
 export class LogoutComponent {
-  constructor(private matchService: MatchService,private router: Router){}
+  constructor(private loginService: LoginService,private router: Router){}
 
   ngOnInit(){
     this.Logout();
@@ -16,7 +16,7 @@ export class LogoutComponent {
 
   Logout(){
     localStorage.removeItem('userEmail');
-    this.matchService.setAuthEmail("");
+    this.loginService.setAuthEmail("");
     this.router.navigate(['/login']);
   }
 }

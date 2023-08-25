@@ -20,8 +20,7 @@ export class MatchService {
 
   public Matches: IMatch[] = matchesData.matches;
   private MatchesUrl = 'https://tourney-f6031-default-rtdb.firebaseio.com/';  // URL to web api
-  private AuthenticatedEmail = "";
-  private AdminEmail = "tsura2003@gmail.com";
+
   private selectedTeam = "";
   public isDebug = false;
 
@@ -38,26 +37,6 @@ export class MatchService {
     private http: HttpClient,
     private db: AngularFireDatabase)
     { }
-
-  setAuthEmail(email: string){
-    this.AuthenticatedEmail = email;
-  }
-
-  getAuthEmail():string{
-    return this.AuthenticatedEmail;
-  }
-
-  isLoggedIn():boolean{
-    return this.AuthenticatedEmail != "";
-  }
-
-  isAdminLoggedIn():boolean{
-    return this.AuthenticatedEmail.toUpperCase() == this.AdminEmail.toUpperCase();
-  }
-
-  isAdminEmail(email: string):boolean{
-    return this.AdminEmail.toUpperCase() == email.toUpperCase();
-  }
 
   getGroups(): Observable<IGroup[]> {
     const output = of(groupsData);

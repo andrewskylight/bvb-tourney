@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatchService } from './matches/match.service';
+import { LoginService } from './login/login.service';
 
 
 @Component({
@@ -8,5 +8,5 @@ import { MatchService } from './matches/match.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(public matchService: MatchService){}
+  constructor(public loginService: LoginService){}
 }

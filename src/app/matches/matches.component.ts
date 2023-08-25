@@ -11,6 +11,7 @@ import setSchema from '../api/setSchema.json';
 
 import { Match } from '../shared/match';
 import { Subscription } from 'rxjs';
+import { LoginService } from '../login/login.service';
 
 @Component({
   selector: 'app-matches',
@@ -29,7 +30,9 @@ export class MatchesComponent implements OnInit, OnDestroy {
   matches$;
 
 
-  constructor(private dialog: MatDialog, private matchService: MatchService) {
+  constructor(private dialog: MatDialog,
+    private matchService: MatchService,
+    private loginService: LoginService) {
   }
 
   ngOnInit(): void {
@@ -62,10 +65,10 @@ export class MatchesComponent implements OnInit, OnDestroy {
 
   initSelectedTeam() {
     if (this.matchService.getSelectedTeam() == "") {
-      if (this.matchService.getAuthEmail() == "" || this.matchService.isAdminLoggedIn())
+      if (this.loginService.getAuthEmail() == "" || this.loginService.isAdminLoggedIn())
         this.matchService.setSelectedTeam("All");
       else
-        this.matchService.setSelectedTeam(this.getTeamNameByEmail(this.matchService.getAuthEmail()));
+        this.matchService.setSelectedTeam(this.getTeamNameByEmail(this.loginService.getAuthEmail()));
     }
 
     this.selectedTeam = this.matchService.getSelectedTeam();
@@ -91,12 +94,12 @@ export class MatchesComponent implements OnInit, OnDestroy {
   }
 
   isEditable(match: IMatch): boolean {
-    if (this.matchService.isAdminLoggedIn())
+    if (this.loginService.isAdminLoggedIn())
       return true;
 
     let team1Email = this.getTeamEmail(match.team1).toUpperCase();
     let team2Email = this.getTeamEmail(match.team2).toUpperCase();
-    let authEmail = this.matchService.getAuthEmail().toUpperCase();
+    let authEmail = this.loginService.getAuthEmail().toUpperCase();
 
     return team1Email == authEmail || team2Email == authEmail;
   }
@@ -200,7 +203,7 @@ export class MatchesComponent implements OnInit, OnDestroy {
   }
 
   anyoneLoggedIn(): boolean {
-    return this.matchService.isLoggedIn();
+    return this.loginService.isLoggedIn();
   }
 
   editSet(match: IMatch, set: ISet, swapTeams: boolean): void {

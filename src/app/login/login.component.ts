@@ -3,6 +3,7 @@ import { MatchService } from '../matches/match.service';
 import { ITeam } from '../shared/interfaces';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { LoginService } from './login.service';
 
 @Component({
   selector: 'app-login',
@@ -16,10 +17,11 @@ export class LoginComponent {
   email: string;
   //password: string;
 
-  constructor(private matchService: MatchService, private router: Router) {
+  constructor(private matchService: MatchService, private loginService: LoginService, private router: Router) {
   }
 
   ngOnInit() {
+    //TODO: This logic will become obsolete
     this.matchService.getTeams()
       .subscribe(teams => {
         this.teams = teams;
@@ -46,7 +48,7 @@ export class LoginComponent {
     if (this.isEmailFound(this.email)) {
       this.result = "Email found; Login successful";
       localStorage.setItem('userEmail',this.email);
-      this.matchService.setAuthEmail(this.email);
+      this.loginService.setAuthEmail(this.email);
       this.router.navigate(['/matches']);
     }
     else
@@ -56,7 +58,7 @@ export class LoginComponent {
 
   isEmailFound(email: string): boolean {
     //Check Conditions
-    if (this.matchService.isAdminEmail(email))
+    if (this.loginService.isAdminEmail(email))
       return true;
 
     //loop through teams' emails
