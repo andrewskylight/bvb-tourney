@@ -2,6 +2,7 @@
 <nav>
   <a routerLink="/login" *ngIf="!this.loginService.isLoggedIn()">Login</a>
   <a routerLink="/logout" *ngIf="this.loginService.isLoggedIn()">Logout</a>
+  <a routerLink="/tourneys">Tourneys</a>
   <a routerLink="/matches">Matches</a>
   <a routerLink="/groups">Groups</a>
 </nav>

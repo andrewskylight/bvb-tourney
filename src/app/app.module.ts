@@ -29,6 +29,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from '../environments/environment';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
+import { TourneyComponent } from './tourney/tourney.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { LogoutComponent } from './logout/logout.component';
     GroupsComponent,
     MatchesComponent,
     LoginComponent,
-    LogoutComponent
+    LogoutComponent,
+    TourneyComponent
   ],
   imports: [
     BrowserModule,

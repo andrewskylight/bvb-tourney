@@ -12,14 +12,16 @@ import setSchema from '../api/setSchema.json';
 import matchesData from '../api/matches.json';
 
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
+import { TourneyService } from '../tourney/tourney.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MatchService {
 
-  public Matches: IMatch[] = matchesData.matches;
   private MatchesUrl = 'https://tourney-f6031-default-rtdb.firebaseio.com/';  // URL to web api
+
+  public Matches: IMatch[] = matchesData.matches;
 
   private selectedTeam = "";
   public isDebug = false;
@@ -35,7 +37,8 @@ export class MatchService {
 
   constructor(
     private http: HttpClient,
-    private db: AngularFireDatabase)
+    private db: AngularFireDatabase,
+    private tourneyService: TourneyService)
     { }
 
   getGroups(): Observable<IGroup[]> {
