@@ -6,7 +6,7 @@ import { SetDialogComponent, SetDialogData } from '../set-dialog/set-dialog.comp
 
 import { MatchService } from './match.service';
 
-import { IGroup, ISet, ITeam, IMatch } from '../shared/interfaces';
+import { IGroup, ISet, ITeam, IMatch, ITourney } from '../shared/interfaces';
 import setSchema from '../api/setSchema.json';
 
 import { Match } from '../shared/match';
@@ -22,13 +22,13 @@ export class MatchesComponent implements OnInit, OnDestroy {
 
   Groups: IGroup[] = groupsData;
 
-  teams: ITeam[];
   matches: IMatch[];
-  matchSubscription: Subscription;
+  tourneyData: ITourney;
+
+  matchesSubs: Subscription;
+  tourneySubs: Subscription;
   selectedTeam = "";
   public showIPGMatchesOnly = false;
-  matches$;
-
 
   constructor(private dialog: MatDialog,
     private matchService: MatchService,
@@ -36,15 +36,20 @@ export class MatchesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.matchService.getTeams()
-      .subscribe(teams => {
-        this.teams = teams;
-      });
+    // DON'T NEED THIS
+    // this.matchService.getTeams()
+    //   .subscribe(teams => {
+    //     this.teams = teams;
+    //   });
 
-    this.matchSubscription = this.matchService.matchesChanged.subscribe(
+    this.matchesSubs = this.matchService.matchesChanged.subscribe(
       matches => (this.matches = matches));
 
-     this.matchService.fetchMatches();
+    this.tourneySubs = this.matchService.tourneyDataChanged.subscribe(
+      tourneyData => (this.tourneyData = tourneyData));
+
+    this.matchService.getTourneyData();
+    this.matchService.fetchMatches();
 
     this.initSelectedTeam();
 
@@ -52,7 +57,8 @@ export class MatchesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.matchSubscription.unsubscribe();
+    this.matchesSubs.unsubscribe();
+    this.tourneySubs.unsubscribe();
   }
 
   initMatches() {
@@ -75,20 +81,26 @@ export class MatchesComponent implements OnInit, OnDestroy {
   }
 
   getTeamNameByEmail(email: string): string {
-    for (let i = 0; i < this.teams.length; i++) {
-      if (email.toUpperCase() == this.teams[i].email.toUpperCase())
-        return this.teams[i].name;
+    if (!this.tourneyData) return "";
+
+    let teams: ITeam[] = this.tourneyData.teams;
+
+    for (let i = 0; i < teams.length; i++) {
+      if (email.toUpperCase() == teams[i].email.toUpperCase())
+        return teams[i].name;
     }
     return "";
   }
 
   getTeamEmail(teamName: string): string {
-    if (teamName == "")
+    if (teamName == "" || !this.tourneyData)
       return "";
 
-    for (let i = 0; i < this.teams.length; i++) {
-      if (this.teams[i].name == teamName)
-        return this.teams[i].email;
+    let teams: ITeam[] = this.tourneyData.teams;
+
+    for (let i = 0; i < teams.length; i++) {
+      if (teams[i].name == teamName)
+        return teams[i].email;
     }
     return "";
   }
@@ -103,7 +115,6 @@ export class MatchesComponent implements OnInit, OnDestroy {
 
     return team1Email == authEmail || team2Email == authEmail;
   }
-
 
   swapTeams(match: IMatch): boolean {
     return this.selectedTeam == match.team2
@@ -244,5 +255,9 @@ export class MatchesComponent implements OnInit, OnDestroy {
 
       this.matchService.updateMatch(result.match).subscribe();
     });
+  }
+
+  test(){
+    this.matchService.getTourneyData();
   }
 }

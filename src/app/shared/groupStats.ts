@@ -214,6 +214,8 @@ export class GroupStats {
   constructor() { }
 
   setGroups(groups: IGroup[]): void {
+
+
     groups.forEach(group => {
       this.groupsStats.push(new GroupWithStats(group.group, group.teams, this))
     });
@@ -238,7 +240,7 @@ export class GroupStats {
   }
 
   consumeAllMatches(matches: IMatch[]) {
-    if (this.groupsStats == null || this.groupsStats.length == 0 || this.setSchema == null)
+    if (this.groupsStats == null || this.groupsStats.length == 0 || !this.setSchema || !matches)
       return;
 
     this.resetGroupStats()

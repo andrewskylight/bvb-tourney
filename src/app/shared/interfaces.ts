@@ -1,3 +1,10 @@
+export interface ITourney{
+  groups: IGroup[];
+  matches: IMatch[];
+  setSchema: ISetSchema[];
+  teams: ITeam[]
+}
+
 export interface IMatch {
   id: number;
   group: string;

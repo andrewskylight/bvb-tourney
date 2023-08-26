@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TourneyService {
 
-  private curTourney: string = "";
+  private dbURL = 'https://tourney-f6031-default-rtdb.firebaseio.com/';  // URL to web api
 
-  constructor() { }
+  private curTourney: string = "";
+  public isTourneyDataRefreshRequired = false;
+
+  constructor(private titleService: Title) { }
 
   getCurTourney():string{
     if (this.curTourney == "")
@@ -23,5 +27,11 @@ export class TourneyService {
     this.curTourney = newTourney;
     localStorage.setItem('curTourney', this.curTourney);
     console.log("Current tourney ", this.curTourney);
+    this.isTourneyDataRefreshRequired = true;
+    this.titleService.setTitle(this.curTourney);
+  }
+
+  getDBURL():string{
+    return this.dbURL;
   }
 }

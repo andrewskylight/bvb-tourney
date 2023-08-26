@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { IMatch, IGroup, ITeam, ISetSchema } from '../shared/interfaces';
+import { IMatch, IGroup, ITeam, ISetSchema, ITourney } from '../shared/interfaces';
 import { Match } from '../shared/match';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -19,17 +19,15 @@ import { TourneyService } from '../tourney/tourney.service';
 })
 export class MatchService {
 
-  private MatchesUrl = 'https://tourney-f6031-default-rtdb.firebaseio.com/';  // URL to web api
-
   public Matches: IMatch[] = matchesData.matches;
+  public tourneyData: ITourney;
+  tourneyDataChanged = new Subject<ITourney>();
 
   private selectedTeam = "";
   public isDebug = false;
 
   private matches: IMatch[];
   matchesChanged = new Subject<IMatch[]>();
-
-  matches$ = this.db.object('matches').valueChanges() as Observable<IMatch[]>;
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -51,45 +49,46 @@ export class MatchService {
     return output;
   }
 
-  getSelectedTeam(): string {
-    if (this.selectedTeam != "")
-      return this.selectedTeam;
-
-    if (localStorage.getItem('selectedTeam') != null){
-      this.selectedTeam = localStorage.getItem('selectedTeam');
-      return this.selectedTeam;
-    }
-
-    return "";
-  }
-
-  setSelectedTeam(selectedTeam:string): void {
-    this.selectedTeam = selectedTeam;
-    localStorage.setItem('selectedTeam',selectedTeam);
-  }
-
   getSetSchema(): Observable<ISetSchema[]> {
     const output = of(setSchema);
     return output;
   }
 
-  /** GET Matches from the server */
-  getMatches(): Observable<IMatch[]> {
-    if(this.isDebug){
-      const output = of(this.Matches);
-      return output;
+  getTourneyData() {
+    if(!this.tourneyData || this.tourneyService.isTourneyDataRefreshRequired){
+      this.http.get<ITourney>(this.getTourneyURL(),this.httpOptions)
+      .subscribe(data => {
+        this.tourneyData = data;
+        this.tourneyDataChanged.next(this.tourneyData);
+        this.tourneyService.isTourneyDataRefreshRequired = false;
+        console.log("Fetched tourney data.");
+      })
+    }else {
+      this.tourneyDataChanged.next(this.tourneyData);
     }
-
-    return this.http.get<IMatch[]>(this.MatchesUrl)
-      .pipe(
-        tap(_ => this.log('fetched Matches')),
-        catchError(this.handleError<IMatch[]>('getMatches', []))
-      );
   }
 
-  /** GET Matches from the server: angularfire2 */
+  public refreshTourneyData() {
+    this.tourneyData = null;
+    this.getTourneyData();
+  }
+
+  getTourneyURL():string{
+    let tourneyURL = this.tourneyService.getDBURL() +
+                    "tourneys/" + this.tourneyService.getCurTourney() + "/.json";
+
+    console.log("Tourney URL",tourneyURL);
+    return tourneyURL;
+  }
+
+  getMatchesPath():string{
+    let matchesPath = 'tourneys/' + this.tourneyService.getCurTourney() + '/matches';
+    return matchesPath;
+  }
+
+  /** FETCH Matches from the server: angularfire2 */
   fetchMatches(){
-    this.db.list('/matches').snapshotChanges()
+    this.db.list(this.getMatchesPath()).snapshotChanges()
     .pipe(
       map(changes => {
         // Convert the snapshotChanges array into a regular array of data objects
@@ -101,25 +100,12 @@ export class MatchService {
     })
 }
 
-  /** GET Match by id. Return `undefined` when id not found */
-  getMatchNo404<Data>(id: number): Observable<Match> {
-    const url = `${this.MatchesUrl}/?id=${id}`;
-    return this.http.get<Match[]>(url)
-      .pipe(
-        map(Matches => Matches[0]), // returns a {0|1} element array
-        tap(h => {
-          const outcome = h ? 'fetched' : 'did not find';
-          this.log(`${outcome} Match id=${id}`);
-        }),
-        catchError(this.handleError<Match>(`getMatch id=${id}`))
-      );
-  }
 
   //////// Save methods //////////
 
   /** POST: add a new Match to the server */
   addMatch(Match: Match): Observable<Match> {
-    return this.http.post<Match>(this.MatchesUrl, Match, this.httpOptions).pipe(
+    return this.http.post<Match>(this.tourneyService.getDBURL(), Match, this.httpOptions).pipe(
       tap((newMatch: Match) => this.log(`added Match w/ id=${newMatch.id}`)),
       catchError(this.handleError<Match>('addMatch'))
     );
@@ -157,7 +143,7 @@ export class MatchService {
    * @param result - optional value to return as the observable result
    */
   private handleError<T>(operation = 'operation', result?: T) {
-
+    console.error(operation);
     return (error: any): Observable<T> => {
 
       // TODO: send the error to remote logging infrastructure
@@ -169,6 +155,24 @@ export class MatchService {
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
+  }
+
+  //////// Selected Team methods //////////
+  getSelectedTeam(): string {
+    if (this.selectedTeam != "")
+      return this.selectedTeam;
+
+    if (localStorage.getItem('selectedTeam') != null){
+      this.selectedTeam = localStorage.getItem('selectedTeam');
+      return this.selectedTeam;
+    }
+
+    return "";
+  }
+
+  setSelectedTeam(selectedTeam:string): void {
+    this.selectedTeam = selectedTeam;
+    localStorage.setItem('selectedTeam',selectedTeam);
   }
 }
 

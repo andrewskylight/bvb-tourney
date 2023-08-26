@@ -1,9 +1,11 @@
+<button role="button" class="btn btn-primary" (click) = "test()">Test</button>
+
 <div class="row">
   <div class="settings-container">
     <div class="col-md-3">
       <label for='teams'>Choose a team:&nbsp;</label>
       <select name="teams" id="teams" [(ngModel)]="this.selectedTeam" (ngModelChange)="onTeamSelectionChange()">
-        <option *ngFor='let team of teams'>{{ team.name }}</option>
+        <option *ngFor='let team of tourneyData?.teams'>{{ team.name }}</option>
         <option>All</option>
       </select>
     </div>

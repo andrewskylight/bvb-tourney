@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
 import { MatchService } from '../matches/match.service';
 
-import { IMatch, IGroup, ISetSchema } from '../shared/interfaces';
+import { IMatch, IGroup, ISetSchema, ITourney } from '../shared/interfaces';
 import { GroupStats } from '../shared/groupStats';
-import matchesData from '../api/matches.json';
 
 import { SetSchema } from '../shared/setSchema';
 
-import groupsData from '../api/groups.json';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-groups',
@@ -18,33 +16,35 @@ import { Observable, Subscription } from 'rxjs';
 export class GroupsComponent {
 
   matches: IMatch[];
-  matchSubscription: Subscription;
+  matchesSubs: Subscription;
+  tourneySubs: Subscription;
+
   public groups: IGroup[];
   public setSchema: ISetSchema[];
-  public groupsDirect = groupsData;
   public stats: GroupStats = new GroupStats();
   public hasTieBreaker = false;
-  public matches$: Observable<IMatch[]>;
 
   displayedColumns: string[] = ['Name', 'M', 'W', 'L', 'Pts', 'Set R', 'PW', 'PL', 'Rank'];
 
   constructor(private matchService: MatchService) { }
 
   ngOnInit() {
-    this.matchService.getSetSchema()
-    .subscribe(setSchema => this.setSetSchema(setSchema));
 
-    this.matchService.getGroups()
-    .subscribe(groups => this.setGroups(groups));
+    this.matchesSubs = this.matchService.matchesChanged.subscribe(
+      matches => this.onMatchesChanged(matches));
 
+    this.tourneySubs = this.matchService.tourneyDataChanged.subscribe(
+      tourneyData => this.onTourneyDataChanged(tourneyData));
+
+    this.matchService.getTourneyData();
     this.matchService.fetchMatches();
 
-    this.matchSubscription = this.matchService.matchesChanged.subscribe(
-        matches => this.onMatchesChanged(matches));
+
   }
 
   ngOnDestroy(){
-    this.matchSubscription.unsubscribe();
+    this.matchesSubs.unsubscribe();
+    this.tourneySubs.unsubscribe();
   }
 
   refreshGroupStats():void {
@@ -53,6 +53,12 @@ export class GroupsComponent {
 
   onMatchesChanged(matches: IMatch[]):void{
     this.matches = matches;
+    this.refreshGroupStats();
+  }
+
+  onTourneyDataChanged(tourneyData: ITourney):void{
+    this.setGroups(tourneyData.groups);
+    this.setSetSchema(tourneyData.setSchema);
     this.refreshGroupStats();
   }
 
