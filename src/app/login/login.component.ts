@@ -4,6 +4,7 @@ import { ITeam } from '../shared/interfaces';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoginService } from './login.service';
+import { TourneyService } from '../tourney/tourney.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ export class LoginComponent {
   email: string;
   //password: string;
 
-  constructor(private matchService: MatchService, private loginService: LoginService, private router: Router) {
+  constructor(public tourneyService: TourneyService, private matchService: MatchService, private loginService: LoginService, private router: Router) {
   }
 
   ngOnInit() {
@@ -47,25 +48,32 @@ export class LoginComponent {
     // Perform login logic here
     if (this.isEmailFound(this.email)) {
       this.result = "Email found; Login successful";
-      localStorage.setItem('userEmail',this.email);
+      localStorage.setItem('userEmail', this.email);
       this.loginService.setAuthEmail(this.email);
-      this.router.navigate(['/matches']);
+
+      if (this.tourneyService.getCurTourney() == "")
+        this.router.navigate(['/tourneys']);
+      else
+        this.router.navigate(['/matches']);
     }
-    else
+    else {
       this.result = "Email not found; Cannot edit; Can view";
-
-  }
-
-  isEmailFound(email: string): boolean {
-    //Check Conditions
-    if (this.loginService.isAdminEmail(email))
-      return true;
-
-    //loop through teams' emails
-    for (let i = 0; i < this.teams.length; i++) {
-      if (this.teams[i].email.toUpperCase() == email.toUpperCase())
-        return true;
     }
-    return false;
   }
-}
+
+
+    isEmailFound(email: string): boolean {
+      //Check Conditions
+      if (this.loginService.isAdminEmail(email))
+        return true;
+
+      //loop through teams' emails
+      for (let i = 0; i < this.teams.length; i++) {
+        if (this.teams[i].email.toUpperCase() == email.toUpperCase())
+          return true;
+      }
+      return false;
+    }
+  }
+
+

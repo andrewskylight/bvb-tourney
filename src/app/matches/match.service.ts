@@ -56,7 +56,7 @@ export class MatchService {
 
   getTourneyData() {
     if(!this.tourneyData || this.tourneyService.isTourneyDataRefreshRequired){
-      this.http.get<ITourney>(this.getTourneyURL(),this.httpOptions)
+      this.http.get<ITourney>(this.getTourneyRootURL() + '/.json',this.httpOptions)
       .subscribe(data => {
         this.tourneyData = data;
         this.tourneyDataChanged.next(this.tourneyData);
@@ -73,13 +73,15 @@ export class MatchService {
     this.getTourneyData();
   }
 
-  getTourneyURL():string{
+  getTourneyRootURL():string{
     let tourneyURL = this.tourneyService.getDBURL() +
-                    "tourneys/" + this.tourneyService.getCurTourney() + "/.json";
+                    "tourneys/" + this.tourneyService.getCurTourney();
 
     console.log("Tourney URL",tourneyURL);
     return tourneyURL;
   }
+
+
 
   getMatchesPath():string{
     let matchesPath = 'tourneys/' + this.tourneyService.getCurTourney() + '/matches';
@@ -121,8 +123,11 @@ export class MatchService {
 
     //const updateURL = this.MatchesUrl + '/' + Match.id + '/sets/0.json';
     //const updateURL = "https://tourney-f6031-default-rtdb.firebaseio.com/matches/0/sets/0/.json";
+    //const updateURL = "https://tourney-f6031-default-rtdb.firebaseio.com/matches/" + Match.id + "/sets.json";
 
-    const updateURL = "https://tourney-f6031-default-rtdb.firebaseio.com/matches/" + Match.id + "/sets.json";
+    let updateURL = this.getTourneyRootURL() + '/matches/' + Match.id + "/sets.json";
+    console.log("update URL", updateURL);
+
     return this.http.put(updateURL, Match.sets, this.httpOptions).pipe(
       tap(_ => this.log(`updated Match id=${Match.id}`)),
       catchError(this.handleError<any>('updateMatch'))

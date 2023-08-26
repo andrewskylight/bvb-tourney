@@ -68,4 +68,8 @@ export class SetData {
   pointGapIsTooLarge() {
     return this.pointDiff > 2;
   }
+
+  bothScoresZero():boolean {
+    return this.points1 == 0 && this.points2 == 0;
+  }
 }

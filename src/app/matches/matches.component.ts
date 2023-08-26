@@ -7,7 +7,6 @@ import { SetDialogComponent, SetDialogData } from '../set-dialog/set-dialog.comp
 import { MatchService } from './match.service';
 
 import { IGroup, ISet, ITeam, IMatch, ITourney } from '../shared/interfaces';
-import setSchema from '../api/setSchema.json';
 
 import { Match } from '../shared/match';
 import { Subscription } from 'rxjs';
@@ -64,7 +63,7 @@ export class MatchesComponent implements OnInit, OnDestroy {
   initMatches() {
     this.matches.forEach(
       match => {
-        let matchHelper = new Match(match, setSchema);
+        let matchHelper = new Match(match, this.tourneyData.setSchema);
         matchHelper.AddSetIfNeeded();
       });
   }
@@ -138,7 +137,7 @@ export class MatchesComponent implements OnInit, OnDestroy {
     }
 
     function isMatchIPG(match: IMatch): boolean {
-      let mh = new Match(match, setSchema);
+      let mh = new Match(match, this.tourneyData.setSchema);
       return !mh.IsMatchFinished();
     }
   }
@@ -248,7 +247,7 @@ export class MatchesComponent implements OnInit, OnDestroy {
       // }
 
       //for some reason angular thinks it's still an interface and not a class, hence the workaround
-      let match = new Match(result.match, setSchema);
+      let match = new Match(result.match, this.tourneyData.setSchema);
 
       match.RemoveSetIfNeeded();
       match.AddSetIfNeeded();

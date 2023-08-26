@@ -8,8 +8,11 @@ export class UserInputValidator {
   }
 
   validateScore(): string {
-    let setData = new SetData(this.data, this.setSchema);
     let errorMessage = "";
+    let setData = new SetData(this.data, this.setSchema);
+
+    if (setData.bothScoresZero())
+      return errorMessage;
 
     //points too low
     if (setData.team1PointsTooLow())
