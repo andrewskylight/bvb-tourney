@@ -82,8 +82,9 @@ export class Match implements IMatch {
       return false;
 
     if (this.setSchema.hasTieBreaker())
-      return this.isThereAWinnerInTieBreakerSets();
+      return this.isThereAWinnerInSetsWithTieBreaker();
     else
+      //fix no of sets: all sets entered and last set is not empty
       return this.baseMatch.sets.length == this.setSchema.setSchema.length && !this.isLastSetEmpty();
 
   }
@@ -92,7 +93,7 @@ export class Match implements IMatch {
     return this.baseMatch.sets == undefined || this.baseMatch.sets.length == 0;
   }
 
-  private isThereAWinnerInTieBreakerSets(): boolean {
+  private isThereAWinnerInSetsWithTieBreaker(): boolean {
     /* CHECK CONDITIONS */
     if (this.areSetsEmptyOrZero() || this.isLastSetEmpty() || this.sets.length < this.setSchema.setSchema.length -1)
       return false;

@@ -6,12 +6,9 @@ import { IMatch, IGroup, ITeam, ISetSchema, ITourney } from '../shared/interface
 import { Match } from '../shared/match';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import groupsData from '../api/groups.json';
-import teamsData from '../api/teams.json';
-import setSchema from '../api/setSchema.json';
 import matchesData from '../api/matches.json';
 
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { TourneyService } from '../tourney/tourney.service';
 
 @Injectable({

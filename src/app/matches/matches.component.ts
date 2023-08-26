@@ -6,7 +6,7 @@ import { SetDialogComponent, SetDialogData } from '../set-dialog/set-dialog.comp
 
 import { MatchService } from './match.service';
 
-import { IGroup, ISet, ITeam, IMatch, ITourney } from '../shared/interfaces';
+import { IGroup, ISet, ITeam, IMatch, ITourney, ISetSchema } from '../shared/interfaces';
 
 import { Match } from '../shared/match';
 import { Subscription } from 'rxjs';
@@ -70,10 +70,17 @@ export class MatchesComponent implements OnInit, OnDestroy {
 
   initSelectedTeam() {
     if (this.matchService.getSelectedTeam() == "") {
-      if (this.loginService.getAuthEmail() == "" || this.loginService.isAdminLoggedIn())
-        this.matchService.setSelectedTeam("All");
-      else
-        this.matchService.setSelectedTeam(this.getTeamNameByEmail(this.loginService.getAuthEmail()));
+      if (this.loginService.getAuthEmail() == "" || this.loginService.isAdminLoggedIn()){
+        if (this.matchService.getSelectedTeam() == "")
+          this.matchService.setSelectedTeam("All");
+      }
+      else{
+        let selTeam = this.getTeamNameByEmail(this.loginService.getAuthEmail());
+        if (selTeam != "")
+          this.matchService.setSelectedTeam(selTeam);
+        else
+          this.matchService.setSelectedTeam("All");
+      }
     }
 
     this.selectedTeam = this.matchService.getSelectedTeam();
@@ -126,18 +133,18 @@ export class MatchesComponent implements OnInit, OnDestroy {
         return true;
       else {
         //show unfinished matches for all teams
-        return isMatchIPG(match);
+        return isMatchIPG(match, this.tourneyData.setSchema);
       }
     } else {
       if (!this.showIPGMatchesOnly)
         return (match.team1 == this.selectedTeam || match.team2 == this.selectedTeam);
       else
-        return isMatchIPG(match) &&
+        return isMatchIPG(match, this.tourneyData.setSchema) &&
           (match.team1 == this.selectedTeam || match.team2 == this.selectedTeam);
     }
 
-    function isMatchIPG(match: IMatch): boolean {
-      let mh = new Match(match, this.tourneyData.setSchema);
+    function isMatchIPG(match: IMatch, setSchema: ISetSchema[]): boolean {
+      let mh = new Match(match, setSchema);
       return !mh.IsMatchFinished();
     }
   }
