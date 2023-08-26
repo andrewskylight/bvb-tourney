@@ -39,20 +39,20 @@ export class MatchService {
     private tourneyService: TourneyService)
     { }
 
-  getGroups(): Observable<IGroup[]> {
-    const output = of(groupsData);
-    return output;
-  }
+  // getGroups(): Observable<IGroup[]> {
+  //   const output = of(groupsData);
+  //   return output;
+  // }
 
-  getTeams(): Observable<ITeam[]> {
-    const output = of(teamsData);
-    return output;
-  }
+  // getTeams(): Observable<ITeam[]> {
+  //   const output = of(teamsData);
+  //   return output;
+  // }
 
-  getSetSchema(): Observable<ISetSchema[]> {
-    const output = of(setSchema);
-    return output;
-  }
+  // getSetSchema(): Observable<ISetSchema[]> {
+  //   const output = of(setSchema);
+  //   return output;
+  // }
 
   getTourneyData() {
     if(!this.tourneyData || this.tourneyService.isTourneyDataRefreshRequired){

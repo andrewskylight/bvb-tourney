@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatchService } from '../matches/match.service';
-import { ITeam } from '../shared/interfaces';
-import { Observable } from 'rxjs';
+import { ITeam, ITourney } from '../shared/interfaces';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoginService } from './login.service';
 import { TourneyService } from '../tourney/tourney.service';
@@ -18,16 +18,32 @@ export class LoginComponent {
   email: string;
   //password: string;
 
+  tourneySubs: Subscription;
+  tourneyData: ITourney;
+
   constructor(public tourneyService: TourneyService, private matchService: MatchService, private loginService: LoginService, private router: Router) {
   }
 
   ngOnInit() {
-    //TODO: This logic will become obsolete
-    this.matchService.getTeams()
-      .subscribe(teams => {
-        this.teams = teams;
+
+    this.tourneySubs = this.matchService.tourneyDataChanged.subscribe(
+      tourneyData => {
+        this.tourneyData = tourneyData
+        this.teams = this.tourneyData.teams;
         this.returningUser();
       });
+
+    this.matchService.getTourneyData();
+    //TODO: This logic will become obsolete
+    // this.matchService.getTeams()
+    //   .subscribe(teams => {
+    //     this.teams = teams;
+    //     this.returningUser();
+    //   });
+  }
+
+  ngOnDestroy() {
+    this.tourneySubs.unsubscribe();
   }
 
   returningUser() {
