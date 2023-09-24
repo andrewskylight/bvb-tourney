@@ -18,6 +18,21 @@ export class LoginService {
     return this.AuthenticatedEmail;
   }
 
+  autoLogin():boolean{
+    let result = false;
+
+    if (!this.isLoggedIn()){
+      if (localStorage.getItem('userEmail') != ""){
+        this.AuthenticatedEmail = localStorage.getItem('userEmail');
+        result = true;
+      }
+    } else {
+      result = true;
+    }
+
+    return result;
+  }
+
   isLoggedIn():boolean{
     return this.AuthenticatedEmail != "";
   }

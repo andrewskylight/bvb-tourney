@@ -7,6 +7,13 @@ import setSchema from '../api/setSchema.json';
 
 import { UserInputValidator } from './userInputValidator';
 
+
+/*
+#TO DO:
+  - when user clicks outside of the dialog box ... it accepts that as enter
+  - issues with error checking for 21 winby2, O/T
+  - make error display as red
+*/
 @Component({
   selector: 'app-set-dialog',
   templateUrl: './set-dialog.component.html',

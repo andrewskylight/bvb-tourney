@@ -7,6 +7,7 @@ import { GroupStats } from '../shared/groupStats';
 import { SetSchema } from '../shared/setSchema';
 
 import { Subscription } from 'rxjs';
+import { LoginService } from '../login/login.service';
 
 @Component({
   selector: 'app-groups',
@@ -26,7 +27,7 @@ export class GroupsComponent {
 
   displayedColumns: string[] = ['Name', 'M', 'W', 'L', 'Pts', 'Set R', 'PW', 'PL', 'Rank'];
 
-  constructor(private matchService: MatchService) { }
+  constructor(private loginService: LoginService, private matchService: MatchService) { }
 
   ngOnInit() {
 
@@ -39,6 +40,7 @@ export class GroupsComponent {
     this.matchService.getTourneyData();
     this.matchService.fetchMatches();
 
+    this.loginService.autoLogin();
 
   }
 

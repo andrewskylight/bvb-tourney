@@ -50,6 +50,7 @@ export class MatchesComponent implements OnInit, OnDestroy {
     this.matchService.getTourneyData();
     this.matchService.fetchMatches();
 
+    this.loginService.autoLogin();
     this.initSelectedTeam();
 
     //this.matchService.getMatches().subscribe(matches => {this.matches = matches});

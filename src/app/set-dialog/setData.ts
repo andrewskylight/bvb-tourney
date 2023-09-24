@@ -32,11 +32,18 @@ export class SetData {
   }
 
   team1PointsTooHigh() {
-    return this.points1 > this.setPointCap && this.pointGapIsTooLarge();
+    return this.teamPointsTooHigh(this.points1);
   }
 
   team2PointsTooHigh() {
-    return this.points2 > this.setPointCap && this.pointGapIsTooLarge();
+    return this.teamPointsTooHigh(this.points2);
+  }
+
+  teamPointsTooHigh(points: number){
+    if (this.winBy2)
+      return points > this.setPointCap && this.pointGapIsTooLarge();
+    else
+      return points > this.setPointCap;
   }
 
   bothTeamsBelowPointCap() {
